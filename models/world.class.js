@@ -22,7 +22,6 @@ class World {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.draw(); // Zeichen-Schleife starten
-        this.update(); // Bewegungs-Logik starten
     }
 
     // Zeichnet die Welt
@@ -42,13 +41,6 @@ class World {
             self.draw();
         });
     }
-
-    update() {
-        setInterval(() => {
-            this.clouds.forEach(cloud => cloud.move());
-        }, 1000 / 60); 
-    }
-
 
     // Fügt mehrere Objekte zur Karte hinzu
     addObjectsToMap(objects) {
