@@ -1,5 +1,5 @@
 class Character extends MoveableObject {
-
+    
     Images_Walking = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -9,46 +9,113 @@ class Character extends MoveableObject {
         'img/2_character_pepe/2_walk/W-26.png'
     ];
 
+    Images_Jumping = [
+        'img/2_character_pepe/3_jump/J-33.png',
+        'img/2_character_pepe/3_jump/J-34.png',
+        'img/2_character_pepe/3_jump/J-35.png',
+        'img/2_character_pepe/3_jump/J-36.png',
+        'img/2_character_pepe/3_jump/J-37.png',
+        'img/2_character_pepe/3_jump/J-38.png',
+    ];
+
+    Images_Standing = [
+        'img/2_character_pepe/1_idle/idle/I-1.png',
+        'img/2_character_pepe/1_idle/idle/I-2.png',
+        'img/2_character_pepe/1_idle/idle/I-3.png',
+        'img/2_character_pepe/1_idle/idle/I-4.png',
+        'img/2_character_pepe/1_idle/idle/I-5.png',
+        'img/2_character_pepe/1_idle/idle/I-6.png',
+        'img/2_character_pepe/1_idle/idle/I-7.png',
+        'img/2_character_pepe/1_idle/idle/I-8.png',
+        'img/2_character_pepe/1_idle/idle/I-9.png',
+        'img/2_character_pepe/1_idle/idle/I-10.png'
+    ];
+
     world;
     speed = 5;
-
+    isJumpingAnimationPlaying = false;
     sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
 
     constructor() {
-        super().loadImage('img/2_character_pepe/2_walk/W-21.png');
+        super();
+        this.loadImages(this.Images_Standing);
         this.loadImages(this.Images_Walking);
-
+        this.loadImages(this.Images_Jumping);
+        this.loadImage(this.Images_Standing[0]);
         this.animate();
+        this.applyGravity();
     }
 
+
     animate() {
-
         setInterval(() => {
-           
+            let isMoving = false;
             if (this.world.keyboard.RIGHT && this.x < 2250) {
-                this.x += this.speed;
-                this.sound_Walking.play();
-                this.otherDirection = false;
+                isMoving = this.moveRightAndPlaySound();
             }
-
             if (this.world.keyboard.LEFT && this.x > -600) {
-                this.x -= this.speed;
-                  this.sound_Walking.play();
-                this.otherDirection = true;
+                isMoving = this.moveLeftAndPlaySound();
+            }
+            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+                isMoving = this.jumpAndPlaySound();
             }
             this.world.camera_x = -this.x + 100;
+            if (!isMoving) {
+                this.sound_Walking.pause();
+            }
         }, 1000 / 60);
 
-        setInterval(() => {
 
-            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+        setInterval(() => {
+            if (this.isAboveGround()) {
+                if (!this.isJumpingAnimationPlaying) {
+                    this.isJumpingAnimationPlaying = true;
+                    this.playAnimationOnce(this.Images_Jumping, () => {
+                        this.isJumpingAnimationPlaying = false;
+                    });
+                }
+            }
+            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.playAnimation(this.Images_Walking);
             }
-        }, 50);
-    };
+            else {
+                this.playAnimation(this.Images_Standing);
+            }
+        }, 100);
+    }
 
 
-    jump() {
+    playAnimationOnce(images, callback) {
+        let currentImageIndex = 0;
+        const interval = setInterval(() => {
+            this.img = this.imageCache[images[currentImageIndex]];
+            currentImageIndex++;
+            if (currentImageIndex >= images.length) {
+                clearInterval(interval);
+                if (callback) callback();
+            }
+        }, 120);
+    }
 
-    };
+
+    moveRightAndPlaySound() {
+        this.moveRight();
+        this.otherDirection = false;
+        if (this.sound_Walking.paused) this.sound_Walking.play();
+        return true;
+    }
+
+
+    moveLeftAndPlaySound() {
+        this.moveLeft();
+        this.otherDirection = true;
+        if (this.sound_Walking.paused) this.sound_Walking.play();
+        return true;
+    }
+
+
+    jumpAndPlaySound() {
+        this.jump();
+        return true; 
+    }
 }
