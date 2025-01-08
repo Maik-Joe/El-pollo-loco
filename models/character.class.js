@@ -12,8 +12,7 @@ class Character extends MoveableObject {
     world;
     speed = 5;
 
-    sound_Walking = new Audio('audio/414332_5235550-lq.mp3');
-
+    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
 
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
@@ -25,7 +24,8 @@ class Character extends MoveableObject {
     animate() {
 
         setInterval(() => {
-            if (this.world.keyboard.RIGHT && this.x < 2157) {
+           
+            if (this.world.keyboard.RIGHT && this.x < 2250) {
                 this.x += this.speed;
                 this.sound_Walking.play();
                 this.otherDirection = false;
@@ -42,10 +42,7 @@ class Character extends MoveableObject {
         setInterval(() => {
 
             if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                let i = this.currentImage % this.Images_Walking.length;
-                let path = this.Images_Walking[i];
-                this.img = this.imageCache[path];
-                this.currentImage++;
+                this.playAnimation(this.Images_Walking);
             }
         }, 50);
     };

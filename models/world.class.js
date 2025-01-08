@@ -1,9 +1,12 @@
 class World {
-    character = new Character(); 
-    
-    enemies = Level1.enemies;
-    clouds = Level1.clouds; 
+
+    clouds = Level1.clouds;
     backgroundObjects = Level1.backgroundObjects;
+    character = new Character();
+    bottles = Level1.bottles;
+    enemies = Level1.enemies;
+    coins = Level1.coins;
+
 
     ctx; // Canvas-Kontext
     canvas; // Canvas-Element
@@ -30,8 +33,8 @@ class World {
 
         // Hintergrund zuerst zeichnen
         this.addObjectsToMap(this.backgroundObjects);
-
-        // Charakter, Gegner und Wolken zeichnen
+        this.addObjectsToMap(this.coins);
+        this.addObjectsToMap(this.bottles);
         this.addToMap(this.character);
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.clouds);
@@ -63,7 +66,7 @@ class World {
         if (mo.otherDirection) {
             mo.x = mo.x * -1;
             this.ctx.restore();
-          
+
         }
     }
 }
