@@ -31,6 +31,19 @@ class Character extends MoveableObject {
         'img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
+    Images_Sleeping= [
+        'img/2_character_pepe/1_idle/long_idle/I-11.png',
+        'img/2_character_pepe/1_idle/long_idle/I-12.png',
+        'img/2_character_pepe/1_idle/long_idle/I-13.png',
+        'img/2_character_pepe/1_idle/long_idle/I-14.png',
+        'img/2_character_pepe/1_idle/long_idle/I-15.png',
+        'img/2_character_pepe/1_idle/long_idle/I-16.png',
+        'img/2_character_pepe/1_idle/long_idle/I-17.png',
+        'img/2_character_pepe/1_idle/long_idle/I-18.png',
+        'img/2_character_pepe/1_idle/long_idle/I-19.png',
+        'img/2_character_pepe/1_idle/long_idle/I-20.png',
+    ];
+
     world;
     speed = 5;
     isJumpingAnimationPlaying = false;
@@ -41,6 +54,7 @@ class Character extends MoveableObject {
         this.loadImages(this.Images_Standing);
         this.loadImages(this.Images_Walking);
         this.loadImages(this.Images_Jumping);
+        this.loadImages(this.Images_Sleeping);
         this.loadImage(this.Images_Standing[0]);
         this.animate();
         this.applyGravity();

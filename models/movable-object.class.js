@@ -11,7 +11,6 @@ class MoveableObject {
     speedY = 0;
     acceleration = 2;
 
-
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -24,7 +23,6 @@ class MoveableObject {
     isAboveGround() {
         return this.y < 230
     }
-
 
     loadImage(path) {
         this.img = new Image();
@@ -39,19 +37,30 @@ class MoveableObject {
         });
     }
 
+    draw(ctx) {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    }
+
+    drawFrame(ctx) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof ChickenSmall || this instanceof Endboss) {
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "blue";
+        ctx.rect(this.x, this.y, this.width, this.height);
+        ctx.stroke();
+        }
+    }
 
     moveRight() {
         this.x += this.speed;
     }
 
-
     moveLeft() {
         this.x -= this.speed;
     }
 
-
     playAnimation(images) {
-        let i = this.currentImage % this.Images_Walking.length;
+        let i = this.currentImage % images.length;
         let path = images[i];
         this.img = this.imageCache[path];
         this.currentImage++;

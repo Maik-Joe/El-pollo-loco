@@ -6,6 +6,8 @@ const Level1 = new Level(
         new SalsaBottle(),
         new SalsaBottle(),
         new SalsaBottle(),
+        new SalsaBottle(),
+        new SalsaBottle(),
         new SalsaBottle()
     ],
 
