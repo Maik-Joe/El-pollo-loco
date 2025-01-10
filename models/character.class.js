@@ -44,16 +44,35 @@ class Character extends MoveableObject {
         'img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
+    Images_Dead= [
+        'img/2_character_pepe/5_dead/D-51.png',
+        'img/2_character_pepe/5_dead/D-52.png',
+        'img/2_character_pepe/5_dead/D-53.png',
+        'img/2_character_pepe/5_dead/D-54.png',
+        'img/2_character_pepe/5_dead/D-55.png',
+        'img/2_character_pepe/5_dead/D-56.png',
+        'img/2_character_pepe/5_dead/D-57.png'
+    ]
+
+    offset = {
+        top : 20,
+        left : 10,
+        right: 10,
+        bottom : 20,  
+    };
+
     world;
     speed = 5;
     isJumpingAnimationPlaying = false;
     sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
+
 
     constructor() {
         super();
         this.loadImages(this.Images_Standing);
         this.loadImages(this.Images_Walking);
         this.loadImages(this.Images_Jumping);
+        this.loadImages(this.Images_Dead);
         this.loadImages(this.Images_Sleeping);
         this.loadImage(this.Images_Standing[0]);
         this.animate();
@@ -81,7 +100,11 @@ class Character extends MoveableObject {
 
 
         setInterval(() => {
-            if (this.isAboveGround()) {
+
+            if(this.isDead()) {
+                this.playAnimationOnce(this.Images_Dead)
+            }
+            else if (this.isAboveGround()) {
                 if (!this.isJumpingAnimationPlaying) {
                     this.isJumpingAnimationPlaying = true;
                     this.playAnimationOnce(this.Images_Jumping, () => {
