@@ -52,7 +52,13 @@ class Character extends MoveableObject {
         'img/2_character_pepe/5_dead/D-55.png',
         'img/2_character_pepe/5_dead/D-56.png',
         'img/2_character_pepe/5_dead/D-57.png'
-    ]
+    ];
+
+    Images_Hurt = [
+        'img/2_character_pepe/4_hurt/H-41.png',
+        'img/2_character_pepe/4_hurt/H-42.png',
+        'img/2_character_pepe/4_hurt/H-43.png'
+    ];
 
     offset = {
         top : 20,
@@ -72,6 +78,7 @@ class Character extends MoveableObject {
         this.loadImages(this.Images_Standing);
         this.loadImages(this.Images_Walking);
         this.loadImages(this.Images_Jumping);
+        this.loadImages(this.Images_Hurt);
         this.loadImages(this.Images_Dead);
         this.loadImages(this.Images_Sleeping);
         this.loadImage(this.Images_Standing[0]);
@@ -102,7 +109,9 @@ class Character extends MoveableObject {
         setInterval(() => {
 
             if(this.isDead()) {
-                this.playAnimationOnce(this.Images_Dead)
+                this.playAnimation(this.Images_Dead)
+            } else if (this.isHurt()) {
+                this.playAnimation(this.Images_Hurt)
             }
             else if (this.isAboveGround()) {
                 if (!this.isJumpingAnimationPlaying) {
