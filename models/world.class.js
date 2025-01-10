@@ -1,11 +1,7 @@
 class World {
 
-    clouds = Level1.clouds;
-    backgroundObjects = Level1.backgroundObjects;
+    level = Level1;
     character = new Character();
-    bottles = Level1.bottles;
-    enemies = Level1.enemies;
-    coins = Level1.coins;
 
 
     ctx; // Canvas-Kontext
@@ -19,10 +15,21 @@ class World {
         this.keyboard = keyboard;
         this.draw(); // Zeichen-Schleife starten
         this.setWorld();
+        this.checkCollisions();
     }
 
     setWorld() {
         this.character.world = this;
+    }
+
+    checkCollisions() {
+        setInterval(() => {
+           this.level.enemies.forEach(enemy => {
+             if  ( this.character.isColliding (enemy)) {
+                console.log ('collision with Character', enemy);
+                }
+           });
+        }, 1000);
     }
 
     // Zeichnet die Welt
@@ -32,12 +39,12 @@ class World {
         this.ctx.translate(this.camera_x, 0);
 
         // Hintergrund zuerst zeichnen
-        this.addObjectsToMap(this.backgroundObjects);
-        this.addObjectsToMap(this.coins);
-        this.addObjectsToMap(this.bottles);
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.enemies);
-        this.addObjectsToMap(this.clouds);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.clouds);
 
         this.ctx.translate(-this.camera_x, 0);
 

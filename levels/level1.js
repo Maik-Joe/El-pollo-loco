@@ -1,5 +1,29 @@
 const Level1 = new Level(
 
+    [   
+        new ChickenSmall(),
+        new ChickenSmall(),
+        new ChickenSmall(),
+        new ChickenSmall(),
+        new Chicken(),
+        new Chicken(),
+        new Chicken(),
+        new Chicken(),
+        new Chicken(),
+        new Endboss()
+    ],
+
+    
+    [
+        new Cloud('img/5_background/layers/4_clouds/1.png'),
+        new Cloud('img/5_background/layers/4_clouds/2.png'),
+        new Cloud('img/5_background/layers/4_clouds/1.png'),
+        new Cloud('img/5_background/layers/4_clouds/2.png'),
+        new Cloud('img/5_background/layers/4_clouds/1.png'),
+        new Cloud('img/5_background/layers/4_clouds/2.png'),
+        new Cloud('img/5_background/layers/4_clouds/1.png'),
+        new Cloud('img/5_background/layers/4_clouds/2.png'),
+    ],
     [
         new SalsaBottle(),
         new SalsaBottle(),
@@ -20,29 +44,8 @@ const Level1 = new Level(
         new Coins()
     ],
 
-    [   
-        new ChickenSmall(),
-        new ChickenSmall(),
-        new ChickenSmall(),
-        new ChickenSmall(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Endboss()
-    ],
 
-     [
-        new Cloud('img/5_background/layers/4_clouds/1.png'),
-        new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'),
-        new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'),
-        new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'),
-        new Cloud('img/5_background/layers/4_clouds/2.png'),
-    ],
+
 
     [
         new BackgroundObject('img/5_background/layers/air.png', -719),
