@@ -3,6 +3,8 @@ class World {
     level = Level1;
     character = new Character();
     statusBar = new StatusBar();
+    throwableObjects = [];
+    
 
     ctx; // Canvas-Kontext
     canvas; // Canvas-Element
@@ -15,22 +17,34 @@ class World {
         this.keyboard = keyboard;
         this.draw(); // Zeichen-Schleife starten
         this.setWorld();
-        this.checkCollisions();
+        this.run();
     }
 
     setWorld() {
         this.character.world = this;
     }
 
-    checkCollisions() {
+    run() {
         setInterval(() => {
-           this.level.enemies.forEach(enemy => {
-             if  ( this.character.isColliding (enemy)) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-                }
-           });
-        }, 1000);
+           this.checkCollisions()
+           this.checkThrowObjects();
+        }, 200);
+    }
+
+    checkThrowObjects() {
+        if (this.keyboard.D) {
+            let bottle = new ThrowableObject (this.character.x +100, this.character.y +100);
+            this.throwableObjects.push(bottle);
+        }
+    }
+
+    checkCollisions() {
+        this.level.enemies.forEach(enemy => {
+            if  ( this.character.isColliding (enemy)) {
+               this.character.hit();
+               this.statusBar.setPercentage(this.character.energy);
+               }
+          });
     }
 
     // Zeichnet die Welt
@@ -46,6 +60,7 @@ class World {
         this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.character);
