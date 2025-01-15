@@ -41,16 +41,15 @@ class World {
 
         // Hintergrund zuerst zeichnen
         this.addObjectsToMap(this.level.backgroundObjects);
-
+        this.addObjectsToMap(this.level.clouds);
         this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBar);
         this.ctx.translate(this.camera_x, 0);
-
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.character);
-        this.addObjectsToMap(this.level.clouds);
+  
 
         this.ctx.translate(-this.camera_x, 0);
 
