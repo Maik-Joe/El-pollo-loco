@@ -38,12 +38,13 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D) {
-            let bottle = new ThrowableObject (this.character.x +60, this.character.y +60);
+        if (this.keyboard.D && this.bottleBar.percentage > 0) {
+            let bottle = new ThrowableObject(this.character.x + 60, this.character.y + 60, this.bottleBar);
             this.throwableObjects.push(bottle);
+            this.bottleBar.setPercentage(Math.max(0, this.bottleBar.percentage - 20)); 
         }
     }
-
+    
     checkCollisions() {
         this.level.enemies.forEach(enemy => {
             if  ( this.character.isColliding (enemy)) {
@@ -56,8 +57,10 @@ class World {
     checkBottles() {
         this.level.bottles.forEach(bottle => {
             if (this.character.isColliding(bottle)) {
-                this.character.pickBottles(); // Aufsammeln der Flasche
-                this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); // Entfernen der Flasche
+                if (this.character.bottleBar.percentage < 100) { 
+                    this.character.pickBottles(); // Aufsammeln der Flasche
+                    this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); // Entfernen der Flasche
+                } 
             }
         });
     }
@@ -71,9 +74,6 @@ class World {
         });
     }
     
-    
-
-    // Zeichnet die Welt
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
