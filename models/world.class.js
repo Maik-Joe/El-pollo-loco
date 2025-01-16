@@ -3,6 +3,8 @@ class World {
     level = Level1;
     character = new Character();
     statusBar = new StatusBar();
+    bottleBar = new BottleBar();
+    coinBar = new CoinBar();
     throwableObjects = [];
     
 
@@ -15,6 +17,8 @@ class World {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.character.bottleBar = this.bottleBar;
+        this.character.coinBar = this.coinBar;
         this.draw(); // Zeichen-Schleife starten
         this.setWorld();
         this.run();
@@ -28,6 +32,8 @@ class World {
         setInterval(() => {
            this.checkCollisions()
            this.checkThrowObjects();
+           this.checkBottles();
+           this.checkCoins();
         }, 200);
     }
 
@@ -47,6 +53,26 @@ class World {
           });
     }
 
+    checkBottles() {
+        this.level.bottles.forEach(bottle => {
+            if (this.character.isColliding(bottle)) {
+                this.character.pickBottles(); // Aufsammeln der Flasche
+                this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); // Entfernen der Flasche
+            }
+        });
+    }
+
+    checkCoins() {
+        this.level.coins.forEach(coin => {
+            if (this.character.isColliding(coin)) {
+                this.character.pickCoins(); // Aufsammeln der Flasche
+                this.level.coins.splice(this.level.coins.indexOf(coin), 1); // Entfernen der Flasche
+            }
+        });
+    }
+    
+    
+
     // Zeichnet die Welt
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -58,6 +84,8 @@ class World {
         this.addObjectsToMap(this.level.clouds);
         this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBar);
+        this.addToMap(this.bottleBar);
+        this.addToMap(this.coinBar);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);

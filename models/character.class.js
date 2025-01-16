@@ -1,5 +1,5 @@
 class Character extends MoveableObject {
-    
+
     Images_Walking = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -31,7 +31,7 @@ class Character extends MoveableObject {
         'img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
-    Images_Sleeping= [
+    Images_Sleeping = [
         'img/2_character_pepe/1_idle/long_idle/I-11.png',
         'img/2_character_pepe/1_idle/long_idle/I-12.png',
         'img/2_character_pepe/1_idle/long_idle/I-13.png',
@@ -44,7 +44,7 @@ class Character extends MoveableObject {
         'img/2_character_pepe/1_idle/long_idle/I-20.png',
     ];
 
-    Images_Dead= [
+    Images_Dead = [
         'img/2_character_pepe/5_dead/D-51.png',
         'img/2_character_pepe/5_dead/D-52.png',
         'img/2_character_pepe/5_dead/D-53.png',
@@ -61,10 +61,10 @@ class Character extends MoveableObject {
     ];
 
     offset = {
-        top : 20,
-        left : 10,
+        top: 20,
+        left: 10,
         right: 10,
-        bottom : 20,  
+        bottom: 20,
     };
 
     world;
@@ -108,7 +108,7 @@ class Character extends MoveableObject {
 
         setInterval(() => {
 
-            if(this.isDead()) {
+            if (this.isDead()) {
                 this.playAnimation(this.Images_Dead)
             } else if (this.isHurt()) {
                 this.playAnimation(this.Images_Hurt)
@@ -162,6 +162,6 @@ class Character extends MoveableObject {
 
     jumpAndPlaySound() {
         this.jump();
-        return true; 
+        return true;
     }
 }

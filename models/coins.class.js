@@ -8,6 +8,14 @@ class Coins extends MoveableObject {
             'img/8_coin/coin_2.png',
         ];
         
+        
+    offset = {
+        top : 0,
+        left : 0,
+        right: 0,
+        bottom : 100,  
+    };
+
         constructor() {
             super().loadImage('img/8_coin/coin_1.png');
             this.x = 150 + Math.random() * 2000;
