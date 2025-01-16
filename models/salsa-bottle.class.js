@@ -7,6 +7,14 @@ class SalsaBottle extends MoveableObject {
         'img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
         'img/6_salsa_bottle/2_salsa_bottle_on_ground.png',
     ];
+
+    offset = {
+        top : 20,
+        left : 40,
+        right: 30,
+        bottom : 0,  
+    };
+
     
     constructor() {
         super().loadImage('img/6_salsa_bottle/1_salsa_bottle_on_ground.png');
