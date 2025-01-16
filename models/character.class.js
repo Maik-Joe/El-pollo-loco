@@ -64,7 +64,7 @@ class Character extends MoveableObject {
         top: 20,
         left: 10,
         right: 10,
-        bottom: 20,
+        bottom: 10,
     };
 
     world;

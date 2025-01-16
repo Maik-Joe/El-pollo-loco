@@ -30,7 +30,7 @@ class World {
 
     run() {
         setInterval(() => {
-           this.checkCollisions()
+           this.checkCollisions();
            this.checkThrowObjects();
            this.checkBottles();
            this.checkCoins();
@@ -52,7 +52,7 @@ class World {
                this.statusBar.setPercentage(this.character.energy);
                }
           });
-    }
+        }
 
     checkBottles() {
         this.level.bottles.forEach(bottle => {
