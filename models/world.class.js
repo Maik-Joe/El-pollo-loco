@@ -39,11 +39,12 @@ class World {
 
     checkThrowObjects() {
         if (this.keyboard.D && this.bottleBar.percentage > 0) {
-            let bottle = new ThrowableObject(this.character.x + 60, this.character.y + 60, this.bottleBar);
+            let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 60, this.bottleBar, this.character.otherDirection ? 'LEFT' : 'RIGHT');
             this.throwableObjects.push(bottle);
             this.bottleBar.setPercentage(Math.max(0, this.bottleBar.percentage - 20)); 
         }
     }
+    
     
     checkCollisions() {
         this.level.enemies.forEach(enemy => {
@@ -58,8 +59,8 @@ class World {
         this.level.bottles.forEach(bottle => {
             if (this.character.isColliding(bottle)) {
                 if (this.character.bottleBar.percentage < 100) { 
-                    this.character.pickBottles(); // Aufsammeln der Flasche
-                    this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); // Entfernen der Flasche
+                    this.character.pickBottles();
+                    this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); 
                 } 
             }
         });
@@ -68,18 +69,15 @@ class World {
     checkCoins() {
         this.level.coins.forEach(coin => {
             if (this.character.isColliding(coin)) {
-                this.character.pickCoins(); // Aufsammeln der Flasche
-                this.level.coins.splice(this.level.coins.indexOf(coin), 1); // Entfernen der Flasche
+                this.character.pickCoins(); 
+                this.level.coins.splice(this.level.coins.indexOf(coin), 1); 
             }
         });
     }
     
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
         this.ctx.translate(this.camera_x, 0);
-
-        // Hintergrund zuerst zeichnen
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         this.ctx.translate(-this.camera_x, 0);
@@ -92,24 +90,19 @@ class World {
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.character);
-  
-
         this.ctx.translate(-this.camera_x, 0);
-
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     }
 
-    // Fügt mehrere Objekte zur Karte hinzu
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         });
     }
 
-    // Fügt ein einzelnes Objekt zur Karte hinzu
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);

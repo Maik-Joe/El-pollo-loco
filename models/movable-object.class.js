@@ -48,28 +48,18 @@ class MoveableObject extends DrawableObject{
     }
 
     pickBottles() {
-        // Nur das Energielevel der BottleBar erhöhen
         this.bottleBar.percentage += 20;
-        
-        // Stelle sicher, dass der Wert der BottleBar nicht über 100 steigt
         if (this.bottleBar.percentage > 100) {
             this.bottleBar.percentage = 100;
         }
-    
-        // Setze die BottleBar auf den neuen Prozentsatz
         this.bottleBar.setPercentage(this.bottleBar.percentage);
     }
     
     pickCoins() {
-        // Nur das Energielevel der BottleBar erhöhen
         this.coinBar.percentage += 20;
-        
-        // Stelle sicher, dass der Wert der BottleBar nicht über 100 steigt
         if (this.coinBar.percentage > 100) {
             this.coinBar.percentage = 100;
         }
-    
-        // Setze die BottleBar auf den neuen Prozentsatz
         this.coinBar.setPercentage(this.coinBar.percentage);
     }
 

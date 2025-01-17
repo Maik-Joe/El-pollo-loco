@@ -15,9 +15,10 @@ class ThrowableObject extends MoveableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
     ];
 
-    bottleBar; // Referenz zur BottleBar-Instanz
+    bottleBar; 
+    otherDirection = false; 
 
-    constructor(x, y, bottleBar) {
+    constructor(x, y, bottleBar, characterDirection = 'right') {
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
         this.loadImages(this.Images_BottleThrow);
         this.loadImages(this.Images_Splash);
@@ -26,31 +27,31 @@ class ThrowableObject extends MoveableObject {
         this.height = 60;
         this.width = 50;
         this.speedY = 20;
-        this.groundLevel = 450; // Definiere die Bodenhöhe
-        this.isOnGround = false; // Status: Hat die Flasche den Boden erreicht?
-        this.bottleBar = bottleBar; // Speichere die BottleBar-Referenz nur, wenn sie übergeben wird
+        this.groundLevel = 450; 
+        this.isOnGround = false; 
+        this.bottleBar = bottleBar; 
+
+      
+        this.otherDirection = characterDirection === 'LEFT';
+
         this.throw();
         this.animate();
     }
 
     throw() {
         this.applyGravity();
-    
         const movementInterval = setInterval(() => {
-            if (!this.isOnGround) {
-                this.x += 15;
-            }
+            this.x += this.otherDirection ? -15 : 15;
             if (this.y + this.height >= this.groundLevel) {
-                this.y = this.groundLevel - this.height; // Setze die Flasche auf den Boden
-                this.speedY = 0; // Stoppe die vertikale Bewegung
-                this.isOnGround = true; // Markiere die Flasche als "auf dem Boden"
-                clearInterval(movementInterval); // Beende die horizontale Bewegung
-                this.playSplashAnimation(); // Starte die Splash-Animation
+                this.y = this.groundLevel - this.height;
+                this.speedY = 0;
+                this.isOnGround = true;
+                clearInterval(movementInterval); 
+                this.playSplashAnimation(); 
             }
         }, 50);
     }
     
-
     animate() {
         setInterval(() => {
             if (!this.isOnGround) {
@@ -78,8 +79,6 @@ class ThrowableObject extends MoveableObject {
             let newPercentage = this.bottleBar.percentage - 20; // Reduziere um 20%
             if (newPercentage < 0) newPercentage = 0; // Stelle sicher, dass der Wert nicht unter 0 geht
             this.bottleBar.setPercentage(newPercentage); // Aktualisiere den BottleBar-Status
-        } else {
-            console.error("BottleBar is undefined. Cannot reduce percentage.");
-        }
+        } 
     }
 }
