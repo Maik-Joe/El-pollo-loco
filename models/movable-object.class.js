@@ -35,25 +35,42 @@ class MoveableObject extends DrawableObject {
     }
 
     isColliding(mo) {
-        const isXColliding =
-            this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-            this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
-
-        const isYColliding =
-            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
-
-        if (isXColliding && isYColliding) {
-            if (mo instanceof ChickenSmall || mo instanceof Chicken) {
-                if (!mo.isDead() && !this.isInAir()) {
-                    this.hit();  // Schaden wird nur zugefügt, wenn Kollision auf beiden Achsen stattfindet
-                }
-            }
+        const isXColliding = this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+                              this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
+        const isYColliding = this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
+                              this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
+    
+        if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken)) {
+            this.processCollisionWithChicken(mo);
         }
+    
         return isXColliding && isYColliding;
     }
-
-
+    
+    processCollisionWithChicken(mo) {
+        if (!mo.isDead() && !this.isInAir()) {
+            this.hit();
+        }
+    }
+    
+    isCollidingWithThrowableObject(enemy) {
+        const isXColliding = this.x + this.width - this.offset.right > enemy.x + enemy.offset.left &&
+                              this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
+        const isYColliding = this.y + this.height - this.offset.bottom > enemy.y + enemy.offset.top &&
+                              this.y + this.offset.top < enemy.y + enemy.height - enemy.offset.bottom;
+    
+        if (isXColliding && isYColliding) {
+            this.handleCollision(enemy);
+            return true;
+        }
+        return false;
+    }
+    
+    handleCollision(enemy) {
+        enemy.takeDamage();
+        this.playSplashAnimation();
+    }
+    
     isCollidingJump(mo) {
         const isYColliding =
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
@@ -100,11 +117,22 @@ class MoveableObject extends DrawableObject {
         return timepassed < 0.8;
     }
 
-    takeDamage() {
-        this.energy -= 100;
+    takeDamage(damage = 100) {
+        this.energy -= damage;
         if (this.energy <= 0) {
             this.energy = 0;
+            this.die(); // Wenn die Energie 0 erreicht, stirbt der Gegner
         }
+    }
+    
+    die() {
+        this.isDeadFlag = true; // Gegner als tot markieren
+    }
+    
+    remove() {
+        this.x = -1000; 
+        this.y = -1000; 
+        this.isDead = true; 
     }
 
     isDead() {
@@ -131,8 +159,8 @@ class MoveableObject extends DrawableObject {
     };
 
     isInAir() {
-        const groundLevel = 230;  // Bodenlevel, passe diesen Wert ggf. an
-        return this.y < groundLevel;  // Wenn Y-Position kleiner als Bodenlevel, ist der Charakter in der Luft
+        const groundLevel = 230;  
+        return this.y < groundLevel;  
     }
 
 }

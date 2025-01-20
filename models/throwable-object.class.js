@@ -17,6 +17,7 @@ class ThrowableObject extends MoveableObject {
 
     bottleBar; 
     otherDirection = false; 
+    splashRadius = 10;
 
     constructor(x, y, bottleBar, characterDirection = 'right') {
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
@@ -69,16 +70,25 @@ class ThrowableObject extends MoveableObject {
             } else {
                 clearInterval(splashInterval); 
                 this.loadImage(this.Images_Splash[this.Images_Splash.length - 1]); 
+                this.checkDamageInRadius(); 
             }
         }, 50); 
     }
 
+    checkDamageInRadius() {
+        this.level.enemies.forEach(enemy => {
+            const distance = Math.sqrt(Math.pow(this.x - enemy.x, 2) + Math.pow(this.y - enemy.y, 2)); 
+            if (distance <= this.splashRadius) { 
+                enemy.takeDamage(); 
+            }
+        });
+    }
+
     reduceBottleBarPercentage() {
-        // Überprüfen, ob bottleBar existiert, bevor auf die percentage zugegriffen wird
         if (this.bottleBar) {
-            let newPercentage = this.bottleBar.percentage - 20; // Reduziere um 20%
-            if (newPercentage < 0) newPercentage = 0; // Stelle sicher, dass der Wert nicht unter 0 geht
-            this.bottleBar.setPercentage(newPercentage); // Aktualisiere den BottleBar-Status
+            let newPercentage = this.bottleBar.percentage - 20; 
+            if (newPercentage < 0) newPercentage = 0;
+            this.bottleBar.setPercentage(newPercentage);
         } 
     }
 }

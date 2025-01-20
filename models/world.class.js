@@ -46,19 +46,26 @@ class World {
     checkCollisions() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                if ((enemy instanceof ChickenSmall || enemy instanceof Chicken || enemy instanceof Endboss) && !enemy.isDead()) {
-                    const isJumpingOnChicken = this.character.isCollidingJump(enemy);
-                    if (isJumpingOnChicken) {
-                        enemy.takeDamage();
-                    } else {
-                        if (!this.character.isInAir()) {
-                            this.character.hit();
-                        }
-                    }
-                }
+                this.handleCharacterEnemyCollision(enemy);
             }
+            this.throwableObjects.forEach(bottle => {
+                if (bottle.isCollidingWithThrowableObject(enemy)) {
+                    bottle.playSplashAnimation();
+                }
+            });
         });
     }
+    
+    handleCharacterEnemyCollision(enemy) {
+        if ((enemy instanceof ChickenSmall || enemy instanceof Chicken || enemy instanceof Endboss) && !enemy.isDead()) {
+            const isJumpingOnChicken = this.character.isCollidingJump(enemy);
+            isJumpingOnChicken ? enemy.takeDamage() : this.character.isInAir() || this.character.hit();
+        }
+    }
+    
+    
+    
+    
     
     checkBottles() {
         this.level.bottles.forEach(bottle => {
