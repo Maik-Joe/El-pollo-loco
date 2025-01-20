@@ -1,6 +1,4 @@
-class MoveableObject extends DrawableObject{
-   
-
+class MoveableObject extends DrawableObject {
     speed = 0.15;
     otherDirection = false;
     speedY = 0;
@@ -20,31 +18,62 @@ class MoveableObject extends DrawableObject{
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
+            } else {
+                this.y = 230;
+                this.speedY = 0;
             }
         }, 1000 / 25);
-    };
+    }
 
     isAboveGround() {
-        if ( this instanceof ThrowableObject) {
-            return true;   
-        } else 
-        return this.y < 230
+        const groundLevel = 230;
+        if (this instanceof ThrowableObject) {
+            return true;
+        } else {
+            return this.y < groundLevel;
+        }
     }
 
     isColliding(mo) {
-        return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+        const isXColliding =
+            this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+            this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
+
+        const isYColliding =
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-            this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
+
+        if (isXColliding && (mo instanceof ChickenSmall || mo instanceof Chicken)) {
+            if (!mo.isDead()) {
+                this.hit();
+            }
+        }
+
+        return isXColliding && isYColliding;
+    }
+
+    isCollidingJump(mo) {
+        const isYColliding =
+            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
+            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
+
+        if (isYColliding && !mo.isDead()) {
+            mo.takeDamage();
+            return true;
+        }
+
+        return false;
     }
 
     hit() {
         this.energy -= 5;
         if (this.energy < 0) {
-            this.energy = 0
+            this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
+
+        this.world.statusBar.setPercentage(this.energy);
     }
 
     pickBottles() {
@@ -54,7 +83,7 @@ class MoveableObject extends DrawableObject{
         }
         this.bottleBar.setPercentage(this.bottleBar.percentage);
     }
-    
+
     pickCoins() {
         this.coinBar.percentage += 20;
         if (this.coinBar.percentage > 100) {
@@ -69,8 +98,16 @@ class MoveableObject extends DrawableObject{
         return timepassed < 0.8;
     }
 
+    takeDamage() {
+        this.energy -= 100;
+        if (this.energy <= 0) {
+            this.energy = 0;
+            this.isDeadFlag = true;
+        }
+    }
+
     isDead() {
-        return this.energy == 0;
+        return this.energy == 0 || this.isDeadFlag;
     }
 
     moveRight() {

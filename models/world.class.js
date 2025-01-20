@@ -1,15 +1,13 @@
 class World {
-
     level = Level1;
     character = new Character();
     statusBar = new StatusBar();
     bottleBar = new BottleBar();
     coinBar = new CoinBar();
     throwableObjects = [];
-    
 
-    ctx; // Canvas-Kontext
-    canvas; // Canvas-Element
+    ctx;
+    canvas;
     keyboard;
     camera_x = 0;
 
@@ -19,7 +17,7 @@ class World {
         this.keyboard = keyboard;
         this.character.bottleBar = this.bottleBar;
         this.character.coinBar = this.coinBar;
-        this.draw(); // Zeichen-Schleife starten
+        this.draw();
         this.setWorld();
         this.run();
     }
@@ -30,10 +28,10 @@ class World {
 
     run() {
         setInterval(() => {
-           this.checkCollisions();
-           this.checkThrowObjects();
-           this.checkBottles();
-           this.checkCoins();
+            this.checkCollisions();
+            this.checkThrowObjects();
+            this.checkBottles();
+            this.checkCoins();
         }, 200);
     }
 
@@ -44,16 +42,23 @@ class World {
             this.bottleBar.setPercentage(Math.max(0, this.bottleBar.percentage - 20)); 
         }
     }
-    
-    
+
     checkCollisions() {
         this.level.enemies.forEach(enemy => {
-            if  ( this.character.isColliding (enemy)) {
-               this.character.hit();
-               this.statusBar.setPercentage(this.character.energy);
-               }
-          });
-        }
+            if (this.character.isColliding(enemy)) {
+                if (enemy instanceof ChickenSmall && !enemy.isDead()) {
+                    const isJumpingOnChicken = this.character.isCollidingJump(enemy);
+                    if (isJumpingOnChicken) {
+                        enemy.takeDamage();
+                    } else {
+                        if (!this.character.isInAir()) {
+                            this.character.hit();
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     checkBottles() {
         this.level.bottles.forEach(bottle => {
@@ -74,7 +79,7 @@ class World {
             }
         });
     }
-    
+
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
@@ -112,15 +117,15 @@ class World {
         mo.drawFrame(this.ctx);
 
         if (mo.otherDirection) {
-           this.flipImageBack(mo);
+            this.flipImageBack(mo);
         }
     }
-    
+
     flipImage(mo) {
         this.ctx.save();
-            this.ctx.translate(mo.width, 0);
-            this.ctx.scale(-1, 1);
-            mo.x = mo.x * -1;
+        this.ctx.translate(mo.width, 0);
+        this.ctx.scale(-1, 1);
+        mo.x = mo.x * -1;
     }
 
     flipImageBack(mo) {
