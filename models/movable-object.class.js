@@ -43,14 +43,16 @@ class MoveableObject extends DrawableObject {
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
-        if (isXColliding && (mo instanceof ChickenSmall || mo instanceof Chicken)) {
-            if (!mo.isDead()) {
-                this.hit();
+        if (isXColliding && isYColliding) {
+            if (mo instanceof ChickenSmall || mo instanceof Chicken) {
+                if (!mo.isDead() && !this.isInAir()) {
+                    this.hit();  // Schaden wird nur zugefügt, wenn Kollision auf beiden Achsen stattfindet
+                }
             }
         }
-
         return isXColliding && isYColliding;
     }
+
 
     isCollidingJump(mo) {
         const isYColliding =
@@ -66,7 +68,7 @@ class MoveableObject extends DrawableObject {
     }
 
     hit() {
-        this.energy -= 5;
+        this.energy -= 20;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -102,7 +104,6 @@ class MoveableObject extends DrawableObject {
         this.energy -= 100;
         if (this.energy <= 0) {
             this.energy = 0;
-            this.isDeadFlag = true;
         }
     }
 
@@ -128,4 +129,10 @@ class MoveableObject extends DrawableObject {
     jump() {
         this.speedY = 20;
     };
+
+    isInAir() {
+        const groundLevel = 230;  // Bodenlevel, passe diesen Wert ggf. an
+        return this.y < groundLevel;  // Wenn Y-Position kleiner als Bodenlevel, ist der Charakter in der Luft
+    }
+
 }

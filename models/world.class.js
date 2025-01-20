@@ -46,7 +46,7 @@ class World {
     checkCollisions() {
         this.level.enemies.forEach(enemy => {
             if (this.character.isColliding(enemy)) {
-                if (enemy instanceof ChickenSmall && !enemy.isDead()) {
+                if ((enemy instanceof ChickenSmall || enemy instanceof Chicken || enemy instanceof Endboss) && !enemy.isDead()) {
                     const isJumpingOnChicken = this.character.isCollidingJump(enemy);
                     if (isJumpingOnChicken) {
                         enemy.takeDamage();
@@ -59,7 +59,7 @@ class World {
             }
         });
     }
-
+    
     checkBottles() {
         this.level.bottles.forEach(bottle => {
             if (this.character.isColliding(bottle)) {
