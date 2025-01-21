@@ -10,12 +10,6 @@ class BottleBar extends DrawableObject {
 
     percentage = 0; // Startwert für die Flaschenenergie
 
-    offset = {
-        top : 20,
-        left : 10,
-        right: 10,
-        bottom : 20,  
-    };
 
     constructor() {
         super();

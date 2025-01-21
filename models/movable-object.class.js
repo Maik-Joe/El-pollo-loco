@@ -43,7 +43,6 @@ class MoveableObject extends DrawableObject {
         if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken)) {
             this.processCollisionWithChicken(mo);
         }
-    
         return isXColliding && isYColliding;
     }
     

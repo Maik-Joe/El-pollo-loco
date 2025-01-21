@@ -3,6 +3,7 @@ class World {
     character = new Character();
     statusBar = new StatusBar();
     bottleBar = new BottleBar();
+    endbossBar = new EndbossBar();
     coinBar = new CoinBar();
     throwableObjects = [];
 
@@ -98,6 +99,7 @@ class World {
         this.addToMap(this.statusBar);
         this.addToMap(this.bottleBar);
         this.addToMap(this.coinBar);
+        this.addToMap(this.endbossBar);
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.throwableObjects);
