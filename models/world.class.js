@@ -59,12 +59,14 @@ class World {
     handleCharacterEnemyCollision(enemy) {
         if ((enemy instanceof ChickenSmall || enemy instanceof Chicken || enemy instanceof Endboss) && !enemy.isDead()) {
             const isJumpingOnChicken = this.character.isCollidingJump(enemy);
-            isJumpingOnChicken ? enemy.takeDamage() : this.character.isInAir() || this.character.hit();
+    
+            if (isJumpingOnChicken) {
+                enemy.takeDamage(); 
+            } else {
+                this.character.hit(); 
+            }
         }
     }
-    
-    
-    
     
     
     checkBottles() {

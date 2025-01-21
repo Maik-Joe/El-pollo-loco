@@ -17,7 +17,6 @@ class ThrowableObject extends MoveableObject {
 
     bottleBar; 
     otherDirection = false; 
-    splashRadius = 10;
 
     constructor(x, y, bottleBar, characterDirection = 'right') {
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
@@ -70,18 +69,8 @@ class ThrowableObject extends MoveableObject {
             } else {
                 clearInterval(splashInterval); 
                 this.loadImage(this.Images_Splash[this.Images_Splash.length - 1]); 
-                this.checkDamageInRadius(); 
             }
         }, 50); 
-    }
-
-    checkDamageInRadius() {
-        this.level.enemies.forEach(enemy => {
-            const distance = Math.sqrt(Math.pow(this.x - enemy.x, 2) + Math.pow(this.y - enemy.y, 2)); 
-            if (distance <= this.splashRadius) { 
-                enemy.takeDamage(); 
-            }
-        });
     }
 
     reduceBottleBarPercentage() {

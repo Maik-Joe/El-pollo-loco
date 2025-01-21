@@ -72,20 +72,21 @@ class MoveableObject extends DrawableObject {
     }
     
     isCollidingJump(mo) {
+        const groundLevel = 230; 
         const isYColliding =
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
-        if (isYColliding && !mo.isDead()) {
-            mo.takeDamage();
-            return true;
+        if (isYColliding && !mo.isDead() && this.isInAir() && this.y < groundLevel) {
+            mo.takeDamage();  
+            return true;  
         }
-
-        return false;
+        return false;  
     }
+    
 
     hit() {
-        this.energy -= 20;
+        this.energy -= 5;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -132,7 +133,7 @@ class MoveableObject extends DrawableObject {
     remove() {
         this.x = -1000; 
         this.y = -1000; 
-        this.isDead = true; 
+        this.isDeadFlag = true; 
     }
 
     isDead() {
