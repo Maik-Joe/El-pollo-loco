@@ -1,17 +1,32 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-
+let sound_Game = new Audio('audio/latin-traditional-music-spanish-mexican-background-intro-theme-258024.mp3');
+sound_Game.volume = 0.04;
 
 function init() {
-
+    initLevel();
+    if (!level1) {
+        console.error('Level konnte nicht initialisiert werden.');
+        return;
+    }
     canvas = document.getElementById("canvas");
     world = new World(canvas, keyboard);
-
-    
-        console.log('my character is', world.character);
-
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const startButton = document.getElementById('startButton');
+    const coveredImage = document.querySelector('.coveredImage');
+
+    startButton.addEventListener('click', () => {
+        sound_Game.play();
+        if (coveredImage && startButton) {
+            coveredImage.style.display = 'none';
+            startButton.style.display = 'none';
+        }
+        init(); 
+    });
+});
 
 window.addEventListener('keydown', (e) =>  {
 

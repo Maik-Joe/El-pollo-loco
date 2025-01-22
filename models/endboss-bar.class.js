@@ -11,6 +11,7 @@ class EndbossBar extends DrawableObject {
     ];
 
     percentage = 100;
+    energy = 100;
 
     constructor() {
         super();
@@ -23,25 +24,30 @@ class EndbossBar extends DrawableObject {
     }
 
     setPercentage(percentage) {
-        this.percentage = percentage;
-        let path = this.Images_Health[this.resolveImageIndex()];
+        percentage = Math.max(0, Math.min(100, percentage));
+        let index = this.resolveImageIndex(percentage);
+        let path = this.Images_Health[index]; 
         this.img = this.imageCache[path];
-    }
-
-        resolveImageIndex() {
-        if (this.percentage == 100) {
+        }
+    
+    
+    
+    resolveImageIndex(percentage) {
+        if (percentage == 100) {
             return 5;
-        } else if (this.percentage > 80) {
+        } else if (percentage > 80) {
             return 4;
-        } else if (this.percentage > 60) {
+        } else if (percentage > 60) {
             return 3;
-        } else if (this.percentage > 40) {
+        } else if (percentage > 40) {
             return 2;
-        } else if (this.percentage > 20) {
+        } else if (percentage > 20) {
             return 1;
         } else {
             return 0;
         }
+    
+    
     }};
 
 

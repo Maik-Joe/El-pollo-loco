@@ -1,8 +1,20 @@
+@font-face {
+    font-family: 'Zabars'; /* Name der Schriftart */
+    src: url('./fonts/Zabars.ttf') format('truetype'); /* Pfad zur Datei */
+    font-weight: normal; /* Optional: Schriftgewicht */
+    font-style: normal; /* Optional: Schriftstil */
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url('img/5_background/second_half_background.png');
+    background-image: url('img/5_background/2ebh_229x_210319.jpg');
+    font-family: 'Zabars';
+    background-size: cover; 
+    width: 100%;
+    height: 100vh;
+    margin: 0;
 }
 
 canvas {
@@ -12,6 +24,52 @@ canvas {
 }
 
 h1 {
-    font-size: 48px;
+    font-size: 82px;
     color: rgba(177, 5, 5, 0.925);
+    text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
+}
+
+.description {
+    display: flex;
+    font-size: 36px;
+    color: rgba(177, 5, 5, 0.925);
+    text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
+    gap: 32px;
+}
+
+.outsideWrapper{  
+    display: flex;
+    justify-content: center;
+}
+
+.insideWrapper{ 
+    width:100%; height:100%; 
+    position:relative;}
+
+.coveredImage{ 
+    width:100%; height:100%; 
+    position:absolute; top:0px; left:0px;
+}
+
+.outsideWrapper button{  
+    position: absolute;
+    z-index: 99;
+    margin-top: 60px;
+    width: 200px;
+    height: 50px;
+    font-size: 32px;
+    font-family: 'Zabars';
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    background-color: rgba(177, 5, 5, 0.925);
+    text-shadow:  1px 1px 0 rgb(0, 0, 0),-1px 1px 0 rgb(0, 0, 0),1px -1px 0 rgb(0, 0, 0),-1px -1px 0 rgb(0, 0, 0);
+}
+
+.outsideWrapper button:hover{  
+    background-color: white;
+    color: rgba(177, 5, 5, 0.925);
+    text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
+    transition: 0.3s;
+    scale: 1.02;
 }

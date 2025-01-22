@@ -40,15 +40,19 @@ class MoveableObject extends DrawableObject {
         const isYColliding = this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
                               this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
     
-        if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken)) {
-            this.processCollisionWithChicken(mo);
+        if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)) {
+            this.processCollisionWithChicken(mo);  // Verarbeite die Kollision mit dem Gegner
         }
         return isXColliding && isYColliding;
     }
     
     processCollisionWithChicken(mo) {
         if (!mo.isDead() && !this.isInAir()) {
-            this.hit();
+            if (mo instanceof Endboss) {
+                this.getHitBoss();  // Der Endboss fügt dem Charakter 50 Schaden zu
+            } else {
+                this.hit();  // Normale Hühnchen fügen dem Charakter 10 Schaden zu
+            }
         }
     }
     
@@ -57,17 +61,12 @@ class MoveableObject extends DrawableObject {
                               this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
         const isYColliding = this.y + this.height - this.offset.bottom > enemy.y + enemy.offset.top &&
                               this.y + this.offset.top < enemy.y + enemy.height - enemy.offset.bottom;
-    
+        
         if (isXColliding && isYColliding) {
-            this.handleCollision(enemy);
+            this.playSplashAnimation();
             return true;
         }
         return false;
-    }
-    
-    handleCollision(enemy) {
-        enemy.takeDamage();
-        this.playSplashAnimation();
     }
     
     isCollidingJump(mo) {
@@ -82,7 +81,6 @@ class MoveableObject extends DrawableObject {
         }
         return false;  
     }
-    
 
     hit() {
         this.energy -= 5;
@@ -95,6 +93,17 @@ class MoveableObject extends DrawableObject {
         this.world.statusBar.setPercentage(this.energy);
     }
 
+    getHitBoss() {
+        this.energy -= 40;
+        if (this.energy < 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
+        }
+
+        this.world.statusBar.setPercentage(this.energy);
+    }
+    
     pickBottles() {
         this.bottleBar.percentage += 20;
         if (this.bottleBar.percentage > 100) {
@@ -124,7 +133,16 @@ class MoveableObject extends DrawableObject {
             this.die(); // Wenn die Energie 0 erreicht, stirbt der Gegner
         }
     }
-    
+
+    takeHitBoss() {
+        this.energy -= 6;
+        if (this.energy < 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
+        }
+    }
+
     die() {
         this.isDeadFlag = true; // Gegner als tot markieren
     }

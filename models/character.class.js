@@ -88,6 +88,7 @@ class Character extends MoveableObject {
 
 
     animate() {
+
         setInterval(() => {
             let isMoving = false;
             if (this.world.keyboard.RIGHT && this.x < 2250) {
@@ -105,9 +106,7 @@ class Character extends MoveableObject {
             }
         }, 1000 / 60);
 
-
         setInterval(() => {
-
             if (this.isDead()) {
                 this.playAnimation(this.Images_Dead)
             } else if (this.isHurt()) {
@@ -130,7 +129,6 @@ class Character extends MoveableObject {
         }, 100);
     }
 
-
     playAnimationOnce(images, callback) {
         let currentImageIndex = 0;
         const interval = setInterval(() => {
@@ -143,22 +141,26 @@ class Character extends MoveableObject {
         }, 120);
     }
 
-
     moveRightAndPlaySound() {
         this.moveRight();
         this.otherDirection = false;
-        if (this.sound_Walking.paused) this.sound_Walking.play();
+        if (this.sound_Walking.paused) {
+            this.sound_Walking.play();
+        }
+        this.sound_Walking.volume = 1.0; 
         return true;
     }
-
-
+    
     moveLeftAndPlaySound() {
         this.moveLeft();
         this.otherDirection = true;
-        if (this.sound_Walking.paused) this.sound_Walking.play();
+        if (this.sound_Walking.paused) {
+            this.sound_Walking.play();
+        }
+        this.sound_Walking.volume = 1.0;
         return true;
     }
-
+    
 
     jumpAndPlaySound() {
         this.jump();

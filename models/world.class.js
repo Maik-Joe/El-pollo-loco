@@ -1,5 +1,5 @@
 class World {
-    level = Level1;
+    level = level1;
     character = new Character();
     statusBar = new StatusBar();
     bottleBar = new BottleBar();
@@ -34,60 +34,6 @@ class World {
             this.checkBottles();
             this.checkCoins();
         }, 200);
-    }
-
-    checkThrowObjects() {
-        if (this.keyboard.D && this.bottleBar.percentage > 0) {
-            let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 60, this.bottleBar, this.character.otherDirection ? 'LEFT' : 'RIGHT');
-            this.throwableObjects.push(bottle);
-            this.bottleBar.setPercentage(Math.max(0, this.bottleBar.percentage - 20)); 
-        }
-    }
-
-    checkCollisions() {
-        this.level.enemies.forEach(enemy => {
-            if (this.character.isColliding(enemy)) {
-                this.handleCharacterEnemyCollision(enemy);
-            }
-            this.throwableObjects.forEach(bottle => {
-                if (bottle.isCollidingWithThrowableObject(enemy)) {
-                    bottle.playSplashAnimation();
-                }
-            });
-        });
-    }
-    
-    handleCharacterEnemyCollision(enemy) {
-        if ((enemy instanceof ChickenSmall || enemy instanceof Chicken || enemy instanceof Endboss) && !enemy.isDead()) {
-            const isJumpingOnChicken = this.character.isCollidingJump(enemy);
-    
-            if (isJumpingOnChicken) {
-                enemy.takeDamage(); 
-            } else {
-                this.character.hit(); 
-            }
-        }
-    }
-    
-    
-    checkBottles() {
-        this.level.bottles.forEach(bottle => {
-            if (this.character.isColliding(bottle)) {
-                if (this.character.bottleBar.percentage < 100) { 
-                    this.character.pickBottles();
-                    this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); 
-                } 
-            }
-        });
-    }
-
-    checkCoins() {
-        this.level.coins.forEach(coin => {
-            if (this.character.isColliding(coin)) {
-                this.character.pickCoins(); 
-                this.level.coins.splice(this.level.coins.indexOf(coin), 1); 
-            }
-        });
     }
 
     draw() {
@@ -130,6 +76,73 @@ class World {
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
+    }
+
+    checkThrowObjects() {
+        if (this.keyboard.D && this.bottleBar.percentage > 0) {
+            let bottle = new ThrowableObject(this.character.x + 40, this.character.y + 60, this.bottleBar, this.character.otherDirection ? 'LEFT' : 'RIGHT');
+            this.throwableObjects.push(bottle);
+            this.bottleBar.setPercentage(Math.max(0, this.bottleBar.percentage - 20)); 
+        }
+    }
+
+    checkCollisions() {
+        this.level.enemies.forEach(enemy => {
+            if (this.character.isColliding(enemy)) {
+                this.handleCharacterEnemyCollision(enemy);
+            }
+    
+            this.throwableObjects.forEach(bottle => {
+                if (bottle.isCollidingWithThrowableObject(enemy)) {
+                    this.handleThrowableCollisionWithEnemy(enemy, bottle);
+                }
+            });
+        });
+    }
+    
+    handleThrowableCollisionWithEnemy(enemy, bottle) {
+        if (enemy instanceof Endboss) {
+            enemy.takeHitBoss();
+            this.endbossBar.setPercentage(enemy.energy);
+        } else {
+            enemy.takeDamage();
+        }
+        bottle.playSplashAnimation();
+    }
+    
+    handleCharacterEnemyCollision(enemy) {
+        if ((enemy instanceof ChickenSmall || enemy instanceof Chicken) && !enemy.isDead()) {
+            const isJumpingOnChicken = this.character.isCollidingJump(enemy);
+            this.processCharacterCollision(isJumpingOnChicken, enemy);
+        }
+    }
+    
+    processCharacterCollision(isJumpingOnChicken, enemy) {
+        if (isJumpingOnChicken) {
+            enemy.takeDamage();
+        } else {
+            this.character.hit();
+        }
+    }
+    
+    checkBottles() {
+        this.level.bottles.forEach(bottle => {
+            if (this.character.isColliding(bottle)) {
+                if (this.character.bottleBar.percentage < 100) { 
+                    this.character.pickBottles();
+                    this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1); 
+                } 
+            }
+        });
+    }
+
+    checkCoins() {
+        this.level.coins.forEach(coin => {
+            if (this.character.isColliding(coin)) {
+                this.character.pickCoins(); 
+                this.level.coins.splice(this.level.coins.indexOf(coin), 1); 
+            }
+        });
     }
 
     flipImage(mo) {
