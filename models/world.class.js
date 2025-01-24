@@ -4,6 +4,7 @@ class World {
     statusBar = new StatusBar();
     bottleBar = new BottleBar();
     endbossBar = new EndbossBar();
+    endboss = new Endboss();
     coinBar = new CoinBar();
     throwableObjects = [];
 
@@ -33,6 +34,7 @@ class World {
             this.checkThrowObjects();
             this.checkBottles();
             this.checkCoins();
+            this.checkGameOver();  // Überprüfung, ob der Charakter tot ist
         }, 200);
     }
 
@@ -143,6 +145,32 @@ class World {
                 this.level.coins.splice(this.level.coins.indexOf(coin), 1); 
             }
         });
+    }
+
+    checkGameOver() {
+        if (this.character.isDead()) {
+            this.showGameOverImage();
+            this.character.stopMovement();
+        } else {
+            const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+            if (endboss && endboss.isDead()) {
+                this.showWinImage();
+                this.character.stopMovement();
+                endboss.stopMovementEndboss();  // Stoppe die Bewegung des Endboss
+            }
+        }
+    }
+    
+    showGameOverImage() {
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("gameOverScreen").style.display = "block";
+        document.getElementById("restartButton").style.display = "block";
+    }
+
+    showWinImage() {
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("winScreen").style.display = "block";
+        document.getElementById("restartButton").style.display = "block";
     }
 
     flipImage(mo) {

@@ -51,7 +51,7 @@ h1 {
     position:absolute; top:0px; left:0px;
 }
 
-.outsideWrapper button{  
+button{  
     position: absolute;
     z-index: 99;
     margin-top: 60px;
@@ -66,10 +66,28 @@ h1 {
     text-shadow:  1px 1px 0 rgb(0, 0, 0),-1px 1px 0 rgb(0, 0, 0),1px -1px 0 rgb(0, 0, 0),-1px -1px 0 rgb(0, 0, 0);
 }
 
-.outsideWrapper button:hover{  
+button:hover{  
     background-color: white;
     color: rgba(177, 5, 5, 0.925);
     text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
     transition: 0.3s;
     scale: 1.02;
+}
+
+#winScreen {
+    width: 300px;
+    height: 300px;
+    top: 100px;
+    left: 200px;
+    animation: rotateAnimation 0.5s ease-in-out forwards; 
+}
+
+@keyframes rotateAnimation {
+    0% {
+        transform: rotate(0deg); 
+    }
+    100% {
+        transform: rotate(720deg);
+        scale: 2;
+    }
 }

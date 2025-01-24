@@ -27,20 +27,22 @@
     <script src="js/game.js"></script>
     <script src="levels/level1.js"></script>
 </head>
-<body onload="init()">
+<body>
 
     <h1>EL POLLO LOCO</h1>
 
-    <div class="outsideWrapper">
+    <div class="outsideWrapper"> 
         <button id="startButton">START GAME</button>
+        <button style="display: none;" id="restartButton">RESTART GAME</button>
         <div class="insideWrapper">
-            <img src="img/9_intro_outro_screens/start/startscreen_1.png" class="coveredImage">
-            <canvas class="covering-canvas" id="canvas" width="720px" height="480px">
-            </canvas>
+            <img id="startScreen" src="img/9_intro_outro_screens/start/startscreen_1.png" class="coveredImage">
+            <img id="gameOverScreen" src="img/9_intro_outro_screens/game_over/oh no you lost!.png" class="coveredImage" style="display: none;">
+            <img id="winScreen" src="img/9_intro_outro_screens/win/win_2.png" class="coveredImage" style="display: none;">
+            <canvas class="covering-canvas" id="canvas" width="720px" height="480px"></canvas>
         </div>
     </div>
-
-  
+    
+    
     <div class="description">
     <p>Arrow Left/Right = Walk</p> <p>Space = Jump</p> <p>D = Throw Bottle</p>
     </div>

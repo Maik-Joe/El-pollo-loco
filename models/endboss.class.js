@@ -1,5 +1,4 @@
 class Endboss extends MoveableObject {
-
     Images_Alert = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
         'img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -44,10 +43,12 @@ class Endboss extends MoveableObject {
     speed = 5;
     energy = 100;
 
+    intervalIDAnimation;
+
     offset = {
         top: 0,
-        left: 70,
-        right: 70,
+        left: 75,
+        right: 75,
         bottom: 0,
     };
 
@@ -62,7 +63,7 @@ class Endboss extends MoveableObject {
     }
 
     animate() {
-        setInterval(() => {
+        this.intervalIDAnimation = setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.Images_Dead);
             } else if (this.isHurt()) {
@@ -74,6 +75,8 @@ class Endboss extends MoveableObject {
             }
         }, 140);
     }
+    
+
 
     isAttacking() {
         if (this.energy < 90) {
@@ -82,5 +85,11 @@ class Endboss extends MoveableObject {
         }
         return this.energy < 90;  
     }
-    
+
+    stopMovementEndboss() {
+        setTimeout(() => {
+            this.speed = 0;  
+            clearInterval(this.intervalIDAnimation);  // Stoppe das Animations-Intervall
+        }, 2000);  // Warte 1 Sekunde, bevor die Bewegung gestoppt wird
+    }
 }

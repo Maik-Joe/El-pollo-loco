@@ -7,7 +7,6 @@ sound_Game.volume = 0.04;
 function init() {
     initLevel();
     if (!level1) {
-        console.error('Level konnte nicht initialisiert werden.');
         return;
     }
     canvas = document.getElementById("canvas");

@@ -67,6 +67,8 @@ class Character extends MoveableObject {
         bottom: 0,
     };
 
+    intervalIDMovement;
+    intervalIDAnimation;
     world;
     speed = 5;
     isJumpingAnimationPlaying = false;
@@ -88,8 +90,8 @@ class Character extends MoveableObject {
 
 
     animate() {
-
-        setInterval(() => {
+        // Bewegungs-Intervalle
+        this.intervalIDMovement = setInterval(() => {
             let isMoving = false;
             if (this.world.keyboard.RIGHT && this.x < 2250) {
                 isMoving = this.moveRightAndPlaySound();
@@ -106,24 +108,22 @@ class Character extends MoveableObject {
             }
         }, 1000 / 60);
 
-        setInterval(() => {
+
+        this.intervalIDAnimation = setInterval(() => {
             if (this.isDead()) {
-                this.playAnimation(this.Images_Dead)
+                this.playAnimation(this.Images_Dead);
             } else if (this.isHurt()) {
-                this.playAnimation(this.Images_Hurt)
-            }
-            else if (this.isAboveGround()) {
+                this.playAnimation(this.Images_Hurt);
+            } else if (this.isAboveGround()) {
                 if (!this.isJumpingAnimationPlaying) {
                     this.isJumpingAnimationPlaying = true;
                     this.playAnimationOnce(this.Images_Jumping, () => {
                         this.isJumpingAnimationPlaying = false;
                     });
                 }
-            }
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.playAnimation(this.Images_Walking);
-            }
-            else {
+            } else {
                 this.playAnimation(this.Images_Standing);
             }
         }, 100);
@@ -165,5 +165,12 @@ class Character extends MoveableObject {
     jumpAndPlaySound() {
         this.jump();
         return true;
+    }
+
+    stopMovement() {
+        this.speed = 0;  // Stoppe die Bewegung des Charakters
+        this.sound_Walking.pause();  // Stoppe den Geh-Sound
+        clearInterval(this.intervalIDMovement);  // Stoppe das Bewegungs-Interval
+        clearInterval(this.intervalIDAnimation);  // Stoppe das Animations-Interval
     }
 }

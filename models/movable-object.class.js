@@ -6,6 +6,10 @@ class MoveableObject extends DrawableObject {
     energy = 100;
     lastHit = 0;
 
+    sound_Coins = new Audio('audio/coin-recieved-230517_424ntki3.mp3');
+    sound_Bottle = new Audio('audio/bottle-pop-45531_wTjI9toB.mp3');
+    sound_Chicken = new Audio('audio/chicken-noise-196746_J6JdS05m.mp3');
+
     offset = {
         top: 0,
         left: 0,
@@ -36,16 +40,16 @@ class MoveableObject extends DrawableObject {
 
     isColliding(mo) {
         const isXColliding = this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-                              this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
+            this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
         const isYColliding = this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-                              this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
-    
+            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
+
         if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)) {
             this.processCollisionWithChicken(mo);  // Verarbeite die Kollision mit dem Gegner
         }
         return isXColliding && isYColliding;
     }
-    
+
     processCollisionWithChicken(mo) {
         if (!mo.isDead() && !this.isInAir()) {
             if (mo instanceof Endboss) {
@@ -55,31 +59,31 @@ class MoveableObject extends DrawableObject {
             }
         }
     }
-    
+
     isCollidingWithThrowableObject(enemy) {
         const isXColliding = this.x + this.width - this.offset.right > enemy.x + enemy.offset.left &&
-                              this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
+            this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
         const isYColliding = this.y + this.height - this.offset.bottom > enemy.y + enemy.offset.top &&
-                              this.y + this.offset.top < enemy.y + enemy.height - enemy.offset.bottom;
-        
+            this.y + this.offset.top < enemy.y + enemy.height - enemy.offset.bottom;
+
         if (isXColliding && isYColliding) {
             this.playSplashAnimation();
             return true;
         }
         return false;
     }
-    
+
     isCollidingJump(mo) {
-        const groundLevel = 230; 
+        const groundLevel = 230;
         const isYColliding =
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
         if (isYColliding && !mo.isDead() && this.isInAir() && this.y < groundLevel) {
-            mo.takeDamage();  
-            return true;  
+            mo.takeDamage();
+            return true;
         }
-        return false;  
+        return false;
     }
 
     hit() {
@@ -103,13 +107,15 @@ class MoveableObject extends DrawableObject {
 
         this.world.statusBar.setPercentage(this.energy);
     }
-    
+
     pickBottles() {
         this.bottleBar.percentage += 20;
         if (this.bottleBar.percentage > 100) {
             this.bottleBar.percentage = 100;
         }
         this.bottleBar.setPercentage(this.bottleBar.percentage);
+        this.sound_Bottle.play();
+        this.sound_Bottle.volume = 0.1;
     }
 
     pickCoins() {
@@ -118,6 +124,8 @@ class MoveableObject extends DrawableObject {
             this.coinBar.percentage = 100;
         }
         this.coinBar.setPercentage(this.coinBar.percentage);
+        this.sound_Coins.play();
+        this.sound_Coins.volume = 0.1;
     }
 
     isHurt() {
@@ -130,7 +138,7 @@ class MoveableObject extends DrawableObject {
         this.energy -= damage;
         if (this.energy <= 0) {
             this.energy = 0;
-            this.die(); // Wenn die Energie 0 erreicht, stirbt der Gegner
+            this.die(); 
         }
     }
 
@@ -144,13 +152,15 @@ class MoveableObject extends DrawableObject {
     }
 
     die() {
-        this.isDeadFlag = true; // Gegner als tot markieren
+        this.isDeadFlag = true 
+        this.sound_Chicken.play();
+        this.sound_Chicken.volume = 0.3;
     }
-    
+
     remove() {
-        this.x = -1000; 
-        this.y = -1000; 
-        this.isDeadFlag = true; 
+        this.x = -1000;
+        this.y = -1000;
+        this.isDeadFlag = true;
     }
 
     isDead() {
@@ -177,8 +187,8 @@ class MoveableObject extends DrawableObject {
     };
 
     isInAir() {
-        const groundLevel = 230;  
-        return this.y < groundLevel;  
+        const groundLevel = 230;
+        return this.y < groundLevel;
     }
 
 }
