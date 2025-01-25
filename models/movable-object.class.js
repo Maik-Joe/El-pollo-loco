@@ -13,8 +13,6 @@ class MoveableObject extends DrawableObject {
     sound_Hurt = new Audio('audio/young-man-being-hurt-95628_Y7RMBAUy.mp3');
     sound_Boss = new Audio('audio/chicken-noises-223056.mp3');
     sound_Win= new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
-   
-
 
     offset = {
         top: 0,
@@ -22,6 +20,14 @@ class MoveableObject extends DrawableObject {
         right: 0,
         bottom: 0,
     };
+
+    playSound(sound) {
+        if (!sound.paused) {
+            sound.pause();
+            sound.currentTime = 0; 
+        }
+        sound.play();
+    }
 
     applyGravity() {
         setInterval(() => {
@@ -99,7 +105,7 @@ class MoveableObject extends DrawableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
-        this.sound_Hurt.play();
+        this.playSound(this.sound_Hurt);
         this.sound_Hurt.volume = 0.07;
         this.world.statusBar.setPercentage(this.energy);
     }
@@ -121,7 +127,7 @@ class MoveableObject extends DrawableObject {
             this.bottleBar.percentage = 100;
         }
         this.bottleBar.setPercentage(this.bottleBar.percentage);
-        this.sound_Bottle.play();
+        this.playSound(this.sound_Bottle);
         this.sound_Bottle.volume = 0.1;
     }
 
@@ -131,7 +137,7 @@ class MoveableObject extends DrawableObject {
             this.coinBar.percentage = 100;
         }
         this.coinBar.setPercentage(this.coinBar.percentage);
-        this.sound_Coins.play();
+        this.playSound(this.sound_Coins);
         this.sound_Coins.volume = 0.1;
     }
 
@@ -156,13 +162,13 @@ class MoveableObject extends DrawableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
-        this.sound_Boss.play();
+        this.playSound(this.sound_Boss);
         this.sound_Boss.volume = 0.5;
     }
 
     die() {
         this.isDeadFlag = true 
-        this.sound_Chicken.play();
+        this.playSound(this.sound_Chicken);
         this.sound_Chicken.volume = 0.2;
     }
 
@@ -199,5 +205,4 @@ class MoveableObject extends DrawableObject {
         const groundLevel = 230;
         return this.y < groundLevel;
     }
-
 }

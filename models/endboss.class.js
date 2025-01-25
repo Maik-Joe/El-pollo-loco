@@ -44,7 +44,6 @@ class Endboss extends MoveableObject {
     energy = 100;
 
     intervalIDAnimation;
-    sound_Win= new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
 
     offset = {
         top: 0,

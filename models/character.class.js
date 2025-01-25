@@ -111,6 +111,7 @@ class Character extends MoveableObject {
 
         this.intervalIDAnimation = setInterval(() => {
             if (this.isDead()) {
+
                 this.playAnimation(this.Images_Dead);
             } else if (this.isHurt()) {
                 this.playAnimation(this.Images_Hurt);
@@ -161,6 +162,7 @@ class Character extends MoveableObject {
         return true;
     }
     
+
     jumpAndPlaySound() {
         this.jump();
         return true;
