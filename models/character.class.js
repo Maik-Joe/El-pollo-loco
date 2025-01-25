@@ -72,7 +72,7 @@ class Character extends MoveableObject {
     world;
     speed = 5;
     isJumpingAnimationPlaying = false;
-    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
+
 
 
     constructor() {
@@ -161,16 +161,16 @@ class Character extends MoveableObject {
         return true;
     }
     
-
     jumpAndPlaySound() {
         this.jump();
         return true;
     }
 
     stopMovement() {
-        this.speed = 0;  // Stoppe die Bewegung des Charakters
-        this.sound_Walking.pause();  // Stoppe den Geh-Sound
-        clearInterval(this.intervalIDMovement);  // Stoppe das Bewegungs-Interval
-        clearInterval(this.intervalIDAnimation);  // Stoppe das Animations-Interval
-    }
+        this.speed = 0;
+        this.sound_Walking.pause();
+        this.sound_Hurt.pause();
+        clearInterval(this.intervalIDMovement);
+        clearInterval(this.intervalIDAnimation);
+    }  
 }

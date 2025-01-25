@@ -44,6 +44,7 @@ class Endboss extends MoveableObject {
     energy = 100;
 
     intervalIDAnimation;
+    sound_Win= new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
 
     offset = {
         top: 0,
@@ -65,6 +66,7 @@ class Endboss extends MoveableObject {
     animate() {
         this.intervalIDAnimation = setInterval(() => {
             if (this.isDead()) {
+                this.sound_Boss.pause();
                 this.playAnimation(this.Images_Dead);
             } else if (this.isHurt()) {
                 this.playAnimation(this.Images_Hurt);
@@ -76,20 +78,21 @@ class Endboss extends MoveableObject {
         }, 140);
     }
     
-
-
     isAttacking() {
         if (this.energy < 90) {
-            this.speed = 10;
+            this.speed = 20;
             this.moveLeft();  
         }
         return this.energy < 90;  
     }
 
     stopMovementEndboss() {
+        this.sound_Win.play();
+        this.sound_Win.volume = 1;
         setTimeout(() => {
             this.speed = 0;  
+            this.sound_Win.pause();
             clearInterval(this.intervalIDAnimation);  // Stoppe das Animations-Intervall
-        }, 2000);  // Warte 1 Sekunde, bevor die Bewegung gestoppt wird
+        }, 2000);  
     }
 }

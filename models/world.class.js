@@ -13,6 +13,8 @@ class World {
     keyboard;
     camera_x = 0;
 
+    sound_Lose= new Audio('audio/classic-game-action-negative-9-224413.mp3');
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
@@ -162,9 +164,13 @@ class World {
     }
     
     showGameOverImage() {
+        this.sound_Lose.play();
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("gameOverScreen").style.display = "block";
         document.getElementById("restartButton").style.display = "block";
+        setTimeout(() => {
+            this.sound_Lose.pause();
+        },1000);
     }
 
     showWinImage() {
