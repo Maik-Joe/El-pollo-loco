@@ -73,8 +73,6 @@ class Character extends MoveableObject {
     speed = 5;
     isJumpingAnimationPlaying = false;
 
-
-
     constructor() {
         super();
         this.loadImages(this.Images_Standing);
@@ -88,9 +86,7 @@ class Character extends MoveableObject {
         this.applyGravity();
     }
 
-
     animate() {
-        // Bewegungs-Intervalle
         this.intervalIDMovement = setInterval(() => {
             let isMoving = false;
             if (this.world.keyboard.RIGHT && this.x < 2250) {
@@ -108,10 +104,8 @@ class Character extends MoveableObject {
             }
         }, 1000 / 60);
 
-
         this.intervalIDAnimation = setInterval(() => {
             if (this.isDead()) {
-
                 this.playAnimation(this.Images_Dead);
             } else if (this.isHurt()) {
                 this.playAnimation(this.Images_Hurt);
@@ -145,24 +139,17 @@ class Character extends MoveableObject {
     moveRightAndPlaySound() {
         this.moveRight();
         this.otherDirection = false;
-        if (this.sound_Walking.paused) {
-            this.sound_Walking.play();
-        }
-        this.sound_Walking.volume = 1.0; 
+        this.playSound(this.sound_Walking);
         return true;
     }
     
     moveLeftAndPlaySound() {
         this.moveLeft();
         this.otherDirection = true;
-        if (this.sound_Walking.paused) {
-            this.sound_Walking.play();
-        }
-        this.sound_Walking.volume = 1.0;
+        this.playSound(this.sound_Walking);
         return true;
     }
     
-
     jumpAndPlaySound() {
         this.jump();
         return true;
@@ -174,5 +161,30 @@ class Character extends MoveableObject {
         this.sound_Hurt.pause();
         clearInterval(this.intervalIDMovement);
         clearInterval(this.intervalIDAnimation);
-    }  
+    }
+
+    reset() {
+        this.x = 0;  
+        this.y = 0;  
+        this.speed = 5;  
+    
+        this.loadImages(this.Images_Standing);  
+        this.loadImage(this.Images_Standing[0]);  
+        this.isJumpingAnimationPlaying = false;  
+
+        const sounds = [
+            this.sound_Walking,
+            this.sound_Hurt,
+        ];
+    
+        sounds.forEach(sound => {
+            sound.pause();  
+            sound.currentTime = 0;  
+        });
+    
+        this.animate();
+        this.applyGravity();  
+    }
+    
+    
 }

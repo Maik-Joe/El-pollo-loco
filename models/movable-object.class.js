@@ -6,13 +6,13 @@ class MoveableObject extends DrawableObject {
     energy = 100;
     lastHit = 0;
 
-    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
-    sound_Coins = new Audio('audio/coin-recieved-230517_424ntki3.mp3');
-    sound_Bottle = new Audio('audio/bottle-pop-45531_wTjI9toB.mp3');
-    sound_Chicken = new Audio('audio/chicken-noise-196746_J6JdS05m.mp3');
-    sound_Hurt = new Audio('audio/young-man-being-hurt-95628_Y7RMBAUy.mp3');
-    sound_Boss = new Audio('audio/chicken-noises-223056.mp3');
-    sound_Win= new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
+    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3')
+    sound_Coins = new Audio('audio/coin-recieved-230517_424ntki3.mp3')
+    sound_Bottle= new Audio('audio/bottle-pop-45531_wTjI9toB.mp3')
+    sound_Chicken= new Audio('audio/chicken-noise-196746_J6JdS05m.mp3')
+    sound_Hurt= new Audio('audio/young-man-being-hurt-95628_Y7RMBAUy.mp3')
+    sound_Boss= new Audio('audio/chicken-noises-223056.mp3')
+    sound_Win= new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3')
 
     offset = {
         top: 0,
@@ -22,11 +22,10 @@ class MoveableObject extends DrawableObject {
     };
 
     playSound(sound) {
-        if (!sound.paused) {
-            sound.pause();
+        if (sound.readyState >= 2 && sound.paused) { 
             sound.currentTime = 0; 
+            sound.play();
         }
-        sound.play();
     }
 
     applyGravity() {

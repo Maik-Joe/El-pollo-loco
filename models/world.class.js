@@ -7,6 +7,7 @@ class World {
     endboss = new Endboss();
     coinBar = new CoinBar();
     throwableObjects = [];
+    GameOver = false;
 
     ctx;
     canvas;
@@ -150,27 +151,26 @@ class World {
     }
 
     checkGameOver() {
+        if (this.GameOver) return;
         if (this.character.isDead()) {
+            this.GameOver = true; 
             this.showGameOverImage();
             this.character.stopMovement();
         } else {
             const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
             if (endboss && endboss.isDead()) {
-                this.showWinImage();
-                this.character.stopMovement();
-                endboss.stopMovementEndboss();  // Stoppe die Bewegung des Endboss
+                this.GameOver = true; 
+                this.showWinImage(); 
+                this.character.stopMovement(); 
+                endboss.stopMovementEndboss();
             }
         }
     }
     
     showGameOverImage() {
-        this.sound_Lose.play();
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("gameOverScreen").style.display = "block";
         document.getElementById("restartButton").style.display = "block";
-        setTimeout(() => {
-            this.sound_Lose.pause();
-        },1000);
     }
 
     showWinImage() {
@@ -189,5 +189,20 @@ class World {
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
+    }
+
+    hideStatusAndRestartButton() {
+        document.getElementById("gameOverScreen").style.display = "none";
+        document.getElementById("winScreen").style.display = "none";
+        document.getElementById("restartButton").style.display = "none";
+    }
+    
+    resetWorld() {
+        world.hideStatusAndRestartButton(); 
+        this.character.reset();
+        this.level.reset();
+        this.throwableObjects = [];
+        this.sound_Lose.pause();
+        this.sound_Lose.currentTime = 0;
     }
 }

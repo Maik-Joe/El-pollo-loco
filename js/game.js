@@ -5,10 +5,8 @@ let sound_Game = new Audio('audio/latin-traditional-music-spanish-mexican-backgr
 sound_Game.volume = 0.04;
 
 function init() {
+    console.log("init() wurde aufgerufen nach Reset");  // Debugging-Zeile hinzufügen
     initLevel();
-    if (!level1) {
-        return;
-    }
     canvas = document.getElementById("canvas");
     world = new World(canvas, keyboard);
 }
@@ -16,7 +14,6 @@ function init() {
 document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('startButton');
     const coveredImage = document.querySelector('.coveredImage');
-
     startButton.addEventListener('click', () => {
         setTimeout(() => {
             if (coveredImage && startButton) {
@@ -25,7 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000);
         sound_Game.play();
-        init();
+        init(); 
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const restartButton = document.getElementById('restartButton');
+    restartButton.addEventListener('click', () => {
+        console.log("Restart button clicked"); 
+        if (world) {
+            world.resetWorld();
+            init(); 
+        }
     });
 });
 
