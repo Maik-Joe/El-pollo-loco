@@ -1,18 +1,20 @@
 class MoveableObject extends DrawableObject {
+    
     speed = 0.15;
     otherDirection = false;
+    isSoundEnabled = true; 
     speedY = 0;
     acceleration = 2;
     energy = 100;
     lastHit = 0;
 
-    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3')
-    sound_Coins = new Audio('audio/coin-recieved-230517_424ntki3.mp3')
-    sound_Bottle= new Audio('audio/bottle-pop-45531_wTjI9toB.mp3')
-    sound_Chicken= new Audio('audio/chicken-noise-196746_J6JdS05m.mp3')
-    sound_Hurt= new Audio('audio/young-man-being-hurt-95628_Y7RMBAUy.mp3')
-    sound_Boss= new Audio('audio/chicken-noises-223056.mp3')
-    sound_Win= new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3')
+    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
+    sound_Coins = new Audio('audio/coin-recieved-230517_424ntki3.mp3');
+    sound_Bottle = new Audio('audio/bottle-pop-45531_wTjI9toB.mp3');
+    sound_Chicken = new Audio('audio/chicken-noise-196746_J6JdS05m.mp3');
+    sound_Hurt = new Audio('audio/young-man-being-hurt-95628_Y7RMBAUy.mp3');
+    sound_Boss = new Audio('audio/chicken-noises-223056.mp3');
+    sound_Win = new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
 
     offset = {
         top: 0,
@@ -22,12 +24,11 @@ class MoveableObject extends DrawableObject {
     };
 
     playSound(sound) {
-        if (sound.readyState >= 2 && sound.paused) { 
-            sound.currentTime = 0; 
-            sound.play();
+        if (this.isSoundEnabled && sound.readyState >= 2) {
+            sound.play().catch(() => {}); // Fehler werden still ignoriert
         }
     }
-
+    
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -56,7 +57,7 @@ class MoveableObject extends DrawableObject {
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
         if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)) {
-            this.processCollisionWithChicken(mo);  // Verarbeite die Kollision mit dem Gegner
+            this.processCollisionWithChicken(mo);
         }
         return isXColliding && isYColliding;
     }
@@ -64,9 +65,9 @@ class MoveableObject extends DrawableObject {
     processCollisionWithChicken(mo) {
         if (!mo.isDead() && !this.isInAir()) {
             if (mo instanceof Endboss) {
-                this.getHitBoss();  // Der Endboss fügt dem Charakter 50 Schaden zu
+                this.getHitBoss();
             } else {
-                this.hit();  // Normale Hühnchen fügen dem Charakter 10 Schaden zu
+                this.hit();
             }
         }
     }
@@ -150,7 +151,7 @@ class MoveableObject extends DrawableObject {
         this.energy -= damage;
         if (this.energy <= 0) {
             this.energy = 0;
-            this.die(); 
+            this.die();
         }
     }
 
@@ -166,7 +167,7 @@ class MoveableObject extends DrawableObject {
     }
 
     die() {
-        this.isDeadFlag = true 
+        this.isDeadFlag = true;
         this.playSound(this.sound_Chicken);
         this.sound_Chicken.volume = 0.2;
     }
@@ -198,10 +199,17 @@ class MoveableObject extends DrawableObject {
 
     jump() {
         this.speedY = 20;
-    };
+    }
 
     isInAir() {
         const groundLevel = 230;
         return this.y < groundLevel;
+    }
+
+    stopMovement() {
+        this.speed = 0;
+        this.isSoundEnabled = false;
+        clearInterval(this.intervalIDMovement);
+        clearInterval(this.intervalIDAnimation);
     }
 }

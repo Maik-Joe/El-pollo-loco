@@ -72,6 +72,8 @@ class Character extends MoveableObject {
     world;
     speed = 5;
     isJumpingAnimationPlaying = false;
+    isSleeping = false;
+    lastMovementTime = Date.now();
 
     constructor() {
         super();
@@ -101,7 +103,13 @@ class Character extends MoveableObject {
             this.world.camera_x = -this.x + 100;
             if (!isMoving) {
                 this.sound_Walking.pause();
+            } else {
+                this.lastMovementTime = Date.now();
+                if (this.isSleeping) {
+                    this.isSleeping = false;
+                }
             }
+            this.checkForSleep();
         }, 1000 / 60);
 
         this.intervalIDAnimation = setInterval(() => {
@@ -116,12 +124,20 @@ class Character extends MoveableObject {
                         this.isJumpingAnimationPlaying = false;
                     });
                 }
+            } else if (this.isSleeping) {
+                this.playAnimation(this.Images_Sleeping);
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.playAnimation(this.Images_Walking);
             } else {
                 this.playAnimation(this.Images_Standing);
             }
         }, 100);
+    }
+
+    checkForSleep() {
+        if (!this.isSleeping && Date.now() - this.lastMovementTime > 5000) {
+            this.isSleeping = true;
+        }
     }
 
     playAnimationOnce(images, callback) {
@@ -142,49 +158,29 @@ class Character extends MoveableObject {
         this.playSound(this.sound_Walking);
         return true;
     }
-    
+
     moveLeftAndPlaySound() {
         this.moveLeft();
         this.otherDirection = true;
         this.playSound(this.sound_Walking);
         return true;
     }
-    
+
     jumpAndPlaySound() {
         this.jump();
         return true;
     }
 
-    stopMovement() {
-        this.speed = 0;
-        this.sound_Walking.pause();
-        this.sound_Hurt.pause();
-        clearInterval(this.intervalIDMovement);
-        clearInterval(this.intervalIDAnimation);
-    }
-
     reset() {
-        this.x = 0;  
-        this.y = 0;  
-        this.speed = 5;  
-    
-        this.loadImages(this.Images_Standing);  
-        this.loadImage(this.Images_Standing[0]);  
-        this.isJumpingAnimationPlaying = false;  
-
-        const sounds = [
-            this.sound_Walking,
-            this.sound_Hurt,
-        ];
-    
-        sounds.forEach(sound => {
-            sound.pause();  
-            sound.currentTime = 0;  
-        });
-    
+        this.x = 0;
+        this.y = 0;
+        this.speed = 5;
+        this.loadImages(this.Images_Standing);
+        this.loadImage(this.Images_Standing[0]);
+        this.isJumpingAnimationPlaying = false;
+        this.isSleeping = false;
+        this.lastMovementTime = Date.now();
         this.animate();
-        this.applyGravity();  
+        this.applyGravity();
     }
-    
-    
 }

@@ -90,8 +90,9 @@ class Endboss extends MoveableObject {
         this.sound_Win.volume = 1;
         setTimeout(() => {
             this.speed = 0;  
+            this.sound_Boss.pause();
             this.sound_Win.pause();
-            clearInterval(this.intervalIDAnimation);  // Stoppe das Animations-Intervall
-        }, 2000);  
+            clearInterval(this.intervalIDAnimation); 
+        }, 1500);  
     }
 }

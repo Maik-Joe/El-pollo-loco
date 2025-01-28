@@ -54,7 +54,7 @@ h1 {
 button{  
     position: absolute;
     z-index: 99;
-    margin-top: 60px;
+    margin-top: 20px;
     width: 200px;
     height: 50px;
     font-size: 32px;
@@ -67,6 +67,29 @@ button{
 }
 
 button:hover{  
+    background-color: white;
+    color: rgba(177, 5, 5, 0.925);
+    text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
+    transition: 0.3s;
+    scale: 1.02;
+}
+
+#menuButton {
+    position: absolute;
+    z-index: 99;
+    margin-top: 80px;
+    width: 200px;
+    height: 50px;
+    font-size: 32px;
+    font-family: 'Zabars';
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    background-color: rgba(177, 5, 5, 0.925);
+    text-shadow:  1px 1px 0 rgb(0, 0, 0),-1px 1px 0 rgb(0, 0, 0),1px -1px 0 rgb(0, 0, 0),-1px -1px 0 rgb(0, 0, 0);
+}
+
+#menuButton:hover {
     background-color: white;
     color: rgba(177, 5, 5, 0.925);
     text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;

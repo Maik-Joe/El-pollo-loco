@@ -5,7 +5,6 @@ let sound_Game = new Audio('audio/latin-traditional-music-spanish-mexican-backgr
 sound_Game.volume = 0.04;
 
 function init() {
-    console.log("init() wurde aufgerufen nach Reset");  // Debugging-Zeile hinzufügen
     initLevel();
     canvas = document.getElementById("canvas");
     world = new World(canvas, keyboard);
@@ -29,11 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const restartButton = document.getElementById('restartButton');
     restartButton.addEventListener('click', () => {
-        console.log("Restart button clicked"); 
         if (world) {
             world.resetWorld();
             init(); 
         }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const menuButton = document.getElementById('menuButton');
+    menuButton.addEventListener('click', () => {
+        window.location.href = 'index.html'; 
     });
 });
 

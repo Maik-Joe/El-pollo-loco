@@ -14,14 +14,13 @@ class World {
     keyboard;
     camera_x = 0;
 
-    sound_Lose= new Audio('audio/classic-game-action-negative-9-224413.mp3');
-
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.character.bottleBar = this.bottleBar;
         this.character.coinBar = this.coinBar;
+        this.gameRunning = true;
         this.draw();
         this.setWorld();
         this.run();
@@ -152,31 +151,30 @@ class World {
 
     checkGameOver() {
         if (this.GameOver) return;
-        if (this.character.isDead()) {
-            this.GameOver = true; 
-            this.showGameOverImage();
-            this.character.stopMovement();
-        } else {
-            const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-            if (endboss && endboss.isDead()) {
-                this.GameOver = true; 
-                this.showWinImage(); 
-                this.character.stopMovement(); 
-                endboss.stopMovementEndboss();
-            }
-        }
+        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+        const checkCondition = (condition, image) => condition && (
+            this.GameOver = true,
+            image(),
+            this.character.stopMovement(),
+            endboss?.stopMovementEndboss(),
+            this.level.enemies.forEach(enemy => enemy.stopMovement?.())
+        );
+        checkCondition(this.character.isDead(), this.showGameOverImage.bind(this));
+        checkCondition(endboss?.isDead(), this.showWinImage.bind(this));
     }
     
     showGameOverImage() {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("gameOverScreen").style.display = "block";
         document.getElementById("restartButton").style.display = "block";
+        document.getElementById("menuButton").style.display = "block";
     }
 
     showWinImage() {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "block";
         document.getElementById("restartButton").style.display = "block";
+        document.getElementById("menuButton").style.display = "block";
     }
 
     flipImage(mo) {
@@ -195,6 +193,7 @@ class World {
         document.getElementById("gameOverScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
         document.getElementById("restartButton").style.display = "none";
+        document.getElementById("menuButton").style.display = "none";
     }
     
     resetWorld() {
@@ -202,7 +201,6 @@ class World {
         this.character.reset();
         this.level.reset();
         this.throwableObjects = [];
-        this.sound_Lose.pause();
-        this.sound_Lose.currentTime = 0;
+        this.gameRunning = true;
     }
 }
