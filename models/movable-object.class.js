@@ -1,8 +1,8 @@
 class MoveableObject extends DrawableObject {
-    
+
     speed = 0.15;
     otherDirection = false;
-    isSoundEnabled = true; 
+    isSoundEnabled = true;
     speedY = 0;
     acceleration = 2;
     energy = 100;
@@ -16,6 +16,7 @@ class MoveableObject extends DrawableObject {
     sound_Boss = new Audio('audio/chicken-noises-223056.mp3');
     sound_Win = new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
 
+
     offset = {
         top: 0,
         left: 0,
@@ -25,10 +26,10 @@ class MoveableObject extends DrawableObject {
 
     playSound(sound) {
         if (this.isSoundEnabled && sound.readyState >= 2) {
-            sound.play().catch(() => {}); // Fehler werden still ignoriert
+            sound.play().catch(() => { }); // Fehler werden still ignoriert
         }
     }
-    
+
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -111,7 +112,7 @@ class MoveableObject extends DrawableObject {
     }
 
     getHitBoss() {
-        this.energy -= 40;
+        this.energy -= 50;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -206,10 +207,32 @@ class MoveableObject extends DrawableObject {
         return this.y < groundLevel;
     }
 
+    toggleSounds(enabled) {
+        this.isSoundEnabled = enabled;
+        const sounds = [
+            this.sound_Walking,
+            this.sound_Coins,
+            this.sound_Bottle,
+            this.sound_Chicken,
+            this.sound_Hurt,
+            this.sound_Boss,
+            this.sound_Win
+        ];
+        sounds.forEach(sound => {
+            if (!enabled) {
+                sound.pause();
+                sound.currentTime = 0; 
+            }
+        });
+    }
+    
     stopMovement() {
         this.speed = 0;
         this.isSoundEnabled = false;
-        clearInterval(this.intervalIDMovement);
-        clearInterval(this.intervalIDAnimation);
+        setTimeout(() => {
+            clearInterval(this.intervalIDMovement);
+            clearInterval(this.intervalIDAnimation);
+        }, 1000);
+
     }
 }

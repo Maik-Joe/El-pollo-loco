@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let soundEnabled = true;
 let sound_Game = new Audio('audio/latin-traditional-music-spanish-mexican-background-intro-theme-258024.mp3');
 sound_Game.volume = 0.04;
 
@@ -20,12 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 startButton.style.display = 'none';
             }
         }, 1000);
-        sound_Game.play();
+        if (soundEnabled) sound_Game.play();
         init(); 
     });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     const restartButton = document.getElementById('restartButton');
     restartButton.addEventListener('click', () => {
         if (world) {
@@ -33,12 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
             init(); 
         }
     });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     const menuButton = document.getElementById('menuButton');
     menuButton.addEventListener('click', () => {
         window.location.href = 'index.html'; 
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const soundButton = document.getElementById('soundButton');
+    const soundButtonImage = soundButton.querySelector('img');
+    soundButton.addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        soundButtonImage.src = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
+        soundEnabled ? sound_Game.play() : (sound_Game.pause(), sound_Game.currentTime = 0);
+        world?.moveableObjects?.forEach(obj => obj.toggleSounds(soundEnabled));
     });
 });
 

@@ -79,7 +79,7 @@ class Endboss extends MoveableObject {
     
     isAttacking() {
         if (this.energy < 90) {
-            this.speed = 20;
+            this.speed = 15;
             this.moveLeft();  
         }
         return this.energy < 90;  
@@ -93,6 +93,6 @@ class Endboss extends MoveableObject {
             this.sound_Boss.pause();
             this.sound_Win.pause();
             clearInterval(this.intervalIDAnimation); 
-        }, 1500);  
+        }, 2000);  
     }
 }

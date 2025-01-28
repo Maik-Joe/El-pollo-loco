@@ -51,7 +51,7 @@ h1 {
     position:absolute; top:0px; left:0px;
 }
 
-button{  
+.button{  
     position: absolute;
     z-index: 99;
     margin-top: 20px;
@@ -66,7 +66,7 @@ button{
     text-shadow:  1px 1px 0 rgb(0, 0, 0),-1px 1px 0 rgb(0, 0, 0),1px -1px 0 rgb(0, 0, 0),-1px -1px 0 rgb(0, 0, 0);
 }
 
-button:hover{  
+.button:hover{  
     background-color: white;
     color: rgba(177, 5, 5, 0.925);
     text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
@@ -95,6 +95,12 @@ button:hover{
     text-shadow:  1px 1px 0 white,-1px 1px 0 white,1px -1px 0 white,-1px -1px 0 white;
     transition: 0.3s;
     scale: 1.02;
+}
+
+.soundButton {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
 }
 
 #winScreen {

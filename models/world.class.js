@@ -7,6 +7,7 @@ class World {
     endboss = new Endboss();
     coinBar = new CoinBar();
     throwableObjects = [];
+    moveableObjects = [];
     GameOver = false;
 
     ctx;
@@ -20,6 +21,7 @@ class World {
         this.keyboard = keyboard;
         this.character.bottleBar = this.bottleBar;
         this.character.coinBar = this.coinBar;
+        this.moveableObjects = [this.character, ...this.level.enemies];
         this.gameRunning = true;
         this.draw();
         this.setWorld();
@@ -152,15 +154,15 @@ class World {
     checkGameOver() {
         if (this.GameOver) return;
         const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-        const checkCondition = (condition, image) => condition && (
-            this.GameOver = true,
-            image(),
-            this.character.stopMovement(),
-            endboss?.stopMovementEndboss(),
-            this.level.enemies.forEach(enemy => enemy.stopMovement?.())
-        );
-        checkCondition(this.character.isDead(), this.showGameOverImage.bind(this));
-        checkCondition(endboss?.isDead(), this.showWinImage.bind(this));
+        const handleEnd = (condition, image) => {
+            if (condition) {
+                this.GameOver = true;
+                image();
+                this.character.stopMovement();
+                if (endboss) endboss.stopMovementEndboss();
+            }};
+        handleEnd(this.character.isDead(), this.showGameOverImage.bind(this));
+        handleEnd(endboss && endboss.isDead(), this.showWinImage.bind(this));
     }
     
     showGameOverImage() {
@@ -203,4 +205,19 @@ class World {
         this.throwableObjects = [];
         this.gameRunning = true;
     }
+
+    toggleSounds(enabled) {
+        this.character.isSoundEnabled = enabled;
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof MoveableObject) {
+                enemy.toggleSounds(enabled);
+            }
+        });
+        this.throwableObjects.forEach(obj => {
+            if (obj instanceof MoveableObject) {
+                obj.toggleSounds(enabled);
+            }
+        });
+    }
+    
 }
