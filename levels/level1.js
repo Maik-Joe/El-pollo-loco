@@ -1,8 +1,18 @@
+/**
+ * Das erste Level des Spiels
+ * @type {Level}
+ */
 let level1;
 
-
+/**
+ * Initialisiert das Level, indem es Gegner, Wolken, Items und den Hintergrund hinzufügt.
+ */
 function initLevel() {
     level1 = new Level(
+        /**
+         * Gegner im Level
+         * @type {Array<Enemy>}
+         */
         [
             new ChickenSmall(),
             new ChickenSmall(),
@@ -15,6 +25,10 @@ function initLevel() {
             new Chicken(),
             new Endboss()
         ],
+        /**
+         * Wolken im Level
+         * @type {Array<Cloud>}
+         */
         [
             new Cloud('img/5_background/layers/4_clouds/1.png'),
             new Cloud('img/5_background/layers/4_clouds/2.png'),
@@ -25,6 +39,10 @@ function initLevel() {
             new Cloud('img/5_background/layers/4_clouds/1.png'),
             new Cloud('img/5_background/layers/4_clouds/2.png'),
         ],
+        /**
+         * Gegenstände im Level (Salsa-Flaschen)
+         * @type {Array<SalsaBottle>}
+         */
         [
             new SalsaBottle(),
             new SalsaBottle(),
@@ -35,6 +53,10 @@ function initLevel() {
             new SalsaBottle(),
             new SalsaBottle()
         ],
+        /**
+         * Münzen im Level
+         * @type {Array<Coins>}
+         */
         [
             new Coins(),
             new Coins(),
@@ -42,6 +64,10 @@ function initLevel() {
             new Coins(),
             new Coins()
         ],
+        /**
+         * Hintergrundobjekte im Level
+         * @type {Array<BackgroundObject>}
+         */
         [
             new BackgroundObject('img/5_background/layers/air.png', -719),
             new BackgroundObject('img/5_background/layers/3_third_layer/2.png', -719),

@@ -1,19 +1,58 @@
+/**
+ * Repräsentiert eine Wolke, die sich am Himmel bewegt.
+ * @extends MoveableObject
+ */
 class Cloud extends MoveableObject {
-    y = 20; // Vertikale Position
-    width = 500; // Breite der Wolke
-    height = 200; // Höhe der Wolke
-    speed = Math.random() * 0.2 + 0.1; 
 
+    /**
+     * Vertikale Position der Wolke
+     * @type {number}
+     */
+    y = 20;
+
+    /**
+     * Breite der Wolke
+     * @type {number}
+     */
+    width = 500;
+
+    /**
+     * Höhe der Wolke
+     * @type {number}
+     */
+    height = 200;
+
+    /**
+     * Geschwindigkeit der Wolke
+     * @type {number}
+     */
+    speed = Math.random() * 0.2 + 0.1;
+
+    /**
+     * Erstellt eine neue Wolke und lädt das entsprechende Bild.
+     * 
+     * @param {string} imagePath - Pfad zum Wolkenbild
+     */
     constructor(imagePath) {
+        // Lädt das Wolkenbild über die Elternklasse
         super().loadImage(imagePath);
-        this.x = Math.random() * 3000; 
+
+        // Setzt eine zufällige X-Position (Startposition der Wolke)
+        this.x = Math.random() * 3000;
+
+        // Legt die Geschwindigkeit fest (leicht zufällig)
         this.speed = 0.1 + Math.random() * 0.2;
+
+        // Startet die Bewegung der Wolke
         this.animate();
     }
 
+    /**
+     * Lässt die Wolke nach links bewegen.
+     */
     animate() {
        setInterval(() => {
-        this.moveLeft();
-    }, 1000 / 60);
+            this.moveLeft();
+       }, 1000 / 60);
     }
 }

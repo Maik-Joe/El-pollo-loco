@@ -1,47 +1,44 @@
+/**
+ * Eine Klasse, die ein bewegliches Objekt darstellt, das von DrawableObject erbt
+ */
 class MoveableObject extends DrawableObject {
 
-    speed = 0.15;
-    otherDirection = false;
-    isSoundEnabled = true;
-    speedY = 0;
-    acceleration = 2;
-    energy = 100;
-    lastHit = 0;
-
-    sound_Walking = new Audio('audio/running-in-grass-6237_O3hpfyba.mp3');
-    sound_Coins = new Audio('audio/coin-recieved-230517_424ntki3.mp3');
-    sound_Bottle = new Audio('audio/bottle-pop-45531_wTjI9toB.mp3');
-    sound_Chicken = new Audio('audio/chicken-noise-196746_J6JdS05m.mp3');
-    sound_Hurt = new Audio('audio/young-man-being-hurt-95628_Y7RMBAUy.mp3');
-    sound_Boss = new Audio('audio/chicken-noises-223056.mp3');
-    sound_Win = new Audio('audio/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
-
-
-    offset = {
+    // Attribute
+    speed = 0.15; // Geschwindigkeit des Objekts
+    otherDirection = false; // Objektrichtung
+    isSoundEnabled = true; // Sound ist aktiviert oder nicht
+    speedY = 0; // Vertikale Geschwindigkeit
+    acceleration = 2; // Beschleunigung
+    energy = 100; // Energie des Objekts
+    lastHit = 0; // Zeitpunkt des letzten Treffers
+    offset = { // Versatz für Kollisionsberechnungen
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0,
+        bottom: 0
     };
 
-    playSound(sound) {
-        if (this.isSoundEnabled && sound.readyState >= 2) {
-            sound.play().catch(() => { }); // Fehler werden still ignoriert
-        }
-    }
-
+    /**
+     * Schwerkraft anwenden
+     * Objekte fallen lassen, wenn sie in der Luft sind
+     */
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
+                // Objekt erreicht den Boden
                 this.y = 230;
                 this.speedY = 0;
             }
         }, 1000 / 25);
     }
 
+    /**
+     * Überprüfen, ob das Objekt über dem Boden ist
+     * @returns {boolean}
+     */
     isAboveGround() {
         const groundLevel = 230;
         if (this instanceof ThrowableObject) {
@@ -51,18 +48,31 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Überprüfen, ob das Objekt mit einem anderen Objekt kollidiert
+     * @param {Object} mo - Ein anderes bewegliches Objekt
+     * @returns {boolean}
+     */
     isColliding(mo) {
-        const isXColliding = this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+        const isXColliding = 
+            this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
             this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
-        const isYColliding = this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
+        
+        const isYColliding = 
+            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
-        if (isXColliding && isYColliding && (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)) {
+        if (isXColliding && isYColliding && 
+            (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)) {
             this.processCollisionWithChicken(mo);
         }
         return isXColliding && isYColliding;
     }
 
+    /**
+     * Verarbeiten der Kollision mit einem Huhn
+     * @param {Object} mo - Ein Huhn-Objekt
+     */
     processCollisionWithChicken(mo) {
         if (!mo.isDead() && !this.isInAir()) {
             if (mo instanceof Endboss) {
@@ -73,19 +83,32 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Überprüfen, ob das Objekt mit einem werfbaren Objekt kollidiert
+     * @param {Object} enemy - Ein feindliches Objekt
+     * @returns {boolean}
+     */
     isCollidingWithThrowableObject(enemy) {
-        const isXColliding = this.x + this.width - this.offset.right > enemy.x + enemy.offset.left &&
+        const isXColliding = 
+            this.x + this.width - this.offset.right > enemy.x + enemy.offset.left &&
             this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
-        const isYColliding = this.y + this.height - this.offset.bottom > enemy.y + enemy.offset.top &&
+        
+        const isYColliding = 
+            this.y + this.height - this.offset.bottom > enemy.y + enemy.offset.top &&
             this.y + this.offset.top < enemy.y + enemy.height - enemy.offset.bottom;
 
         if (isXColliding && isYColliding) {
-            this.playSplashAnimation();
+            this.playSplashAnimation(); // Falls du einen Splash-Effekt hast
             return true;
         }
         return false;
     }
 
+    /**
+     * Überprüfen, ob das Objekt beim Sprung kollidiert
+     * @param {Object} mo - Ein bewegliches Objekt
+     * @returns {boolean}
+     */
     isCollidingJump(mo) {
         const groundLevel = 230;
         const isYColliding =
@@ -99,18 +122,24 @@ class MoveableObject extends DrawableObject {
         return false;
     }
 
+    /**
+     * Das Objekt erleidet einen Treffer
+     */
     hit() {
+        if (this.isDead()) return;
         this.energy -= 5;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
-        this.playSound(this.sound_Hurt);
-        this.sound_Hurt.volume = 0.07;
+        AudioManager.play('hurt', 0.07);
         this.world.statusBar.setPercentage(this.energy);
     }
 
+    /**
+     * Das Objekt erleidet einen Treffer vom Boss
+     */
     getHitBoss() {
         this.energy -= 50;
         if (this.energy < 0) {
@@ -118,36 +147,49 @@ class MoveableObject extends DrawableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
-
         this.world.statusBar.setPercentage(this.energy);
     }
 
+    /**
+     * Flaschen aufsammeln
+     */
     pickBottles() {
         this.bottleBar.percentage += 20;
         if (this.bottleBar.percentage > 100) {
             this.bottleBar.percentage = 100;
         }
         this.bottleBar.setPercentage(this.bottleBar.percentage);
-        this.playSound(this.sound_Bottle);
-        this.sound_Bottle.volume = 0.1;
+        // Sound abspielen
+        AudioManager.play('bottle', 0.1);
     }
 
+    /**
+     * Münzen aufsammeln
+     */
     pickCoins() {
         this.coinBar.percentage += 20;
         if (this.coinBar.percentage > 100) {
             this.coinBar.percentage = 100;
         }
         this.coinBar.setPercentage(this.coinBar.percentage);
-        this.playSound(this.sound_Coins);
-        this.sound_Coins.volume = 0.1;
+        // Sound abspielen
+        AudioManager.play('coins', 0.1);
     }
 
+    /**
+     * Überprüfen, ob das Objekt verletzt ist
+     * @returns {boolean}
+     */
     isHurt() {
-        let timepassed = new Date().getTime() - this.lastHit;
+        let timepassed = new Date().getTime() - this.lastHit; 
         timepassed = timepassed / 1000;
         return timepassed < 0.8;
     }
 
+    /**
+     * Das Objekt nimmt Schaden
+     * @param {number} damage - Die Schadenshöhe
+     */
     takeDamage(damage = 100) {
         this.energy -= damage;
         if (this.energy <= 0) {
@@ -156,6 +198,9 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Der Boss nimmt Schaden
+     */
     takeHitBoss() {
         this.energy -= 6;
         if (this.energy < 0) {
@@ -163,34 +208,53 @@ class MoveableObject extends DrawableObject {
         } else {
             this.lastHit = new Date().getTime();
         }
-        this.playSound(this.sound_Boss);
-        this.sound_Boss.volume = 0.5;
+        // Endboss-Sound
+        AudioManager.play('boss', 0.5);
     }
 
+    /**
+     * Das Objekt stirbt
+     */
     die() {
         this.isDeadFlag = true;
-        this.playSound(this.sound_Chicken);
-        this.sound_Chicken.volume = 0.2;
+        AudioManager.play('chicken', 0.2);
     }
 
+    /**
+     * Das Objekt entfernen
+     */
     remove() {
         this.x = -1000;
         this.y = -1000;
         this.isDeadFlag = true;
     }
 
+    /**
+     * Überprüfen, ob das Objekt tot ist
+     * @returns {boolean}
+     */
     isDead() {
         return this.energy == 0 || this.isDeadFlag;
     }
 
+    /**
+     * Das Objekt bewegt sich nach rechts
+     */
     moveRight() {
         this.x += this.speed;
     }
 
+    /**
+     * Das Objekt bewegt sich nach links
+     */
     moveLeft() {
         this.x -= this.speed;
     }
 
+    /**
+     * Animation abspielen
+     * @param {Array} images - Array von Bildpfaden
+     */
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -198,41 +262,19 @@ class MoveableObject extends DrawableObject {
         this.currentImage++;
     }
 
+    /**
+     * Das Objekt springt
+     */
     jump() {
         this.speedY = 20;
     }
 
+    /**
+     * Überprüfen, ob das Objekt in der Luft ist
+     * @returns {boolean}
+     */
     isInAir() {
         const groundLevel = 230;
         return this.y < groundLevel;
-    }
-
-    toggleSounds(enabled) {
-        this.isSoundEnabled = enabled;
-        const sounds = [
-            this.sound_Walking,
-            this.sound_Coins,
-            this.sound_Bottle,
-            this.sound_Chicken,
-            this.sound_Hurt,
-            this.sound_Boss,
-            this.sound_Win
-        ];
-        sounds.forEach(sound => {
-            if (!enabled) {
-                sound.pause();
-                sound.currentTime = 0; 
-            }
-        });
-    }
-    
-    stopMovement() {
-        this.speed = 0;
-        this.isSoundEnabled = false;
-        setTimeout(() => {
-            clearInterval(this.intervalIDMovement);
-            clearInterval(this.intervalIDAnimation);
-        }, 1000);
-
     }
 }
