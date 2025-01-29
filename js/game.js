@@ -34,7 +34,7 @@ sound_Game.volume = 0.04;
  */
 function init() {
     initLevel();
-    canvas = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+    canvas = document.getElementById("canvas");
     world = new World(canvas, keyboard);
 }
 
@@ -42,67 +42,73 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Startet das Spiel, blendet das Startmenü aus und spielt Musik.
      */
-    const startButton = /** @type {HTMLButtonElement} */ (document.getElementById('startButton'));
-    const coveredImage = /** @type {HTMLElement} */ (document.querySelector('.coveredImage'));
-    const startInfo = /** @type {HTMLElement} */ (document.getElementById('startInfo'));
-    startButton.addEventListener('click', () => {
-        setTimeout(() => {
-            if (coveredImage && startButton && startInfo) {
-                coveredImage.style.display = 'none';
-                startButton.style.display = 'none';
-                startInfo.style.display = 'none';
-            }
-        }, 1000);
-        if (soundEnabled) sound_Game.play();
-        init(); 
-    });
+    const startButton = document.getElementById('startButton');
+    const coveredImage = document.querySelector('.coveredImage');
+    const startInfo = document.getElementById('startInfo');
+
+    if (startButton) {
+        startButton.addEventListener('click', () => {
+            setTimeout(() => {
+                if (coveredImage && startButton && startInfo) {
+                    coveredImage.style.display = 'none';
+                    startButton.style.display = 'none';
+                    startInfo.style.display = 'none';
+                }
+            }, 1000);
+            if (soundEnabled) sound_Game.play();
+            init();
+        });
+    }
 
     /**
      * Neustart-Funktion: Setzt die Welt zurück und startet sie neu.
      */
-    const restartButton = /** @type {HTMLButtonElement} */ (document.getElementById('restartButton'));
-    restartButton.addEventListener('click', () => {
-        if (world) {
-            world.resetWorld();
-            sound_Game.play();
-            init(); 
-        }
-    });
+    const restartButton = document.getElementById('restartButton');
+    if (restartButton) {
+        restartButton.addEventListener('click', () => {
+            if (world) {
+                world.resetWorld();
+                sound_Game.play();
+                init();
+            }
+        });
+    }
 
     /**
      * Navigiert zurück zum Hauptmenü.
      */
-    const menuButton = /** @type {HTMLButtonElement} */ (document.getElementById('menuButton'));
-    menuButton.addEventListener('click', () => {
-        window.location.href = 'index.html'; 
-    });
+    const menuButton = document.getElementById('menuButton');
+    if (menuButton) {
+        menuButton.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
 
     /**
      * Steuerung für das Ein- und Ausschalten des Sounds.
      */
     const buttons = [
-        /** @type {HTMLButtonElement} */ (document.getElementById('soundButton')),
-        /** @type {HTMLButtonElement} */ (document.getElementById('soundButton2'))
-    ];
-    let soundEnabled = true;
-    buttons.forEach(button => button.addEventListener('click', () => {
-        soundEnabled = !soundEnabled;
-        const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
-        buttons.forEach(btn => (btn.querySelector('img')).src = newSrc);
+        document.getElementById('soundButton'),
+        document.getElementById('soundButton2')
+    ].filter(Boolean); // Entfernt `null`-Elemente, falls ein Button nicht existiert
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
+            buttons.forEach(btn => btn.querySelector('img').src = newSrc);
     
-        // Hintergrundmusik separat ein-/ausschalten
-        if (soundEnabled) {
-            sound_Game.play();
-        } else {
-            sound_Game.pause();
-            sound_Game.currentTime = 0;
-        }
+            if (soundEnabled) {
+                sound_Game.play();
+            } else {
+                sound_Game.pause();
+                sound_Game.currentTime = 0;
+            }
     
-        // Nun ALLE Sounds (die im AudioManager sind) toggeln
-        AudioManager.toggleSounds(soundEnabled);
-    }));
-    
-    
+            AudioManager.toggleSounds(soundEnabled);
+        });
+    });
+
     setupMobileControls();
 });
 
@@ -122,7 +128,7 @@ function setupMobileControls() {
  * @param {string} key - Die entsprechende Taste, die simuliert wird.
  */
 function setupTouchControl(buttonId, key) {
-    const button = /** @type {HTMLButtonElement} */ (document.getElementById(buttonId));
+    const button = document.getElementById(buttonId);
     if (button) {
         button.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -139,22 +145,45 @@ function setupTouchControl(buttonId, key) {
  * Hört auf Tastendrücke und setzt die zugehörigen Variablen auf `true`.
  */
 window.addEventListener('keydown', (e) => {
-    if (e.keyCode == 39) keyboard.RIGHT = true;
-    if (e.keyCode == 37) keyboard.LEFT = true;
-    if (e.keyCode == 38) keyboard.UP = true;
-    if (e.keyCode == 40) keyboard.DOWN = true;
-    if (e.keyCode == 32) keyboard.SPACE = true;
-    if (e.keyCode == 68) keyboard.D = true;
+    switch (e.keyCode) {
+        case 39: keyboard.RIGHT = true; break;
+        case 37: keyboard.LEFT = true; break;
+        case 38: keyboard.UP = true; break;
+        case 40: keyboard.DOWN = true; break;
+        case 32: keyboard.SPACE = true; break;
+        case 68: keyboard.D = true; break;
+    }
 });
 
 /**
  * Hört auf das Loslassen von Tasten und setzt die Variablen auf `false`.
  */
 window.addEventListener('keyup', (e) => {
-    if (e.keyCode == 39) keyboard.RIGHT = false;
-    if (e.keyCode == 37) keyboard.LEFT = false;
-    if (e.keyCode == 38) keyboard.UP = false;
-    if (e.keyCode == 40) keyboard.DOWN = false;
-    if (e.keyCode == 32) keyboard.SPACE = false;
-    if (e.keyCode == 68) keyboard.D = false;
+    switch (e.keyCode) {
+        case 39: keyboard.RIGHT = false; break;
+        case 37: keyboard.LEFT = false; break;
+        case 38: keyboard.UP = false; break;
+        case 40: keyboard.DOWN = false; break;
+        case 32: keyboard.SPACE = false; break;
+        case 68: keyboard.D = false; break;
+    }
 });
+
+/**
+ * Blendet das Overlay aus und startet das Video.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const overlayStartButton = document.getElementById("overlay-start");
+    const overlay = document.getElementById("overlay");
+    const video = document.getElementById("myVideo");
+
+    if (overlayStartButton) {
+        overlayStartButton.addEventListener("click", function () {
+            if (overlay) overlay.style.display = "none";
+            if (video) {
+                video.play().catch(() => {});
+            }
+        });
+    }
+});
+

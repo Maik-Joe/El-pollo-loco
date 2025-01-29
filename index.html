@@ -35,9 +35,15 @@
 
 <body>
 
-    <!-- Hintergrundvideo im Vollbild-Hintergrund -->
-    <video id="myVideo" autoplay loop>
+    <!-- Overlay mit Start-Button -->
+    <div class="overlay-video" id="overlay">
+        <button id="overlay-start">START</button>
+    </div>
+
+    <!-- Hintergrundvideo -->
+    <video id="myVideo" loop>
         <source src="video/240570_medium.mp4" type="video/mp4">
+        Dein Browser unterstützt kein HTML5-Video.
     </video>
 
     <!-- Spieltitel -->
@@ -64,9 +70,9 @@
             <!-- Mobile Buttons zur Steuerung auf Smartphones -->
             <div class="mobile-buttons">
                 <div class="left-action">
-                    <button id="btn-left"><img src="img/buttons/left-28998_1280.png" width="24px"
+                    <button id="btn-left"><img src="img/buttons/left-28998_1280.png" width="32px"
                             height="auto"></button>
-                    <button id="btn-right"><img src="img/buttons/arrow-30330_1280.png" width="24px"
+                    <button id="btn-right"><img src="img/buttons/arrow-30330_1280.png" width="32px"
                             height="auto"></button>
                 </div>
                 <div>
@@ -76,7 +82,7 @@
                 </div>
                 <div class="right-action">
                     <button id="btn-jump">
-                        <img src="img/buttons/button-29139_1280.png" width="24px" height="auto">
+                        <img src="img/buttons/button-29139_1280.png" width="32px" height="auto">
                     </button>
                     <button id="btn-throw" class="throw">
                         <img src="img/6_salsa_bottle/salsa_bottle.png" width="42" height="auto">

@@ -199,6 +199,54 @@ video {
     width: 100%;
 }
 
+.overlay-video {
+    display: none;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+}
+
+.overlay-video button {
+    font-family: 'Zabars';
+    font-size: 32px;
+    color: white;
+    text-shadow: 1px 1px 0 rgb(0, 0, 0), -1px 1px 0 rgb(0, 0, 0), 1px -1px 0 rgb(0, 0, 0), -1px -1px 0 rgb(0, 0, 0);
+    background-image: url(img/5_background/complete_background.png);
+    background-size: cover;
+    background-position: center;
+    width: 120px; /* Gleiche Breite und Höhe für den Kreis */
+    height: 120px;
+    display: flex; /* Zentriert den Text */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none; /* Optional: Entfernt Standardrahmen */
+    padding: 0; /* Entfernt zusätzliches Padding */
+    cursor: pointer; /* Ändert den Cursor bei Hover */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+}
+
+
 /* Keyframe-Animation für das Win-Bild (Rotation & Vergrößerung) */
 @keyframes rotateAnimation {
     0% {
@@ -241,6 +289,10 @@ video {
     video {
         display: block;
     }
+    .overlay-video {
+        display: flex;
+    }
+    
 }
 
 /* Styles für Bildschirme unter 580px Höhe */
@@ -249,7 +301,13 @@ video {
     .descriptionMobile {
         display: flex;
     }
+
     video {
+        display: none;
+    }
+
+     /* Blendet das Overlay in der Querfunktion aus */
+    .overlay-video {
         display: none;
     }
     /* Reduziere Button-Größe */
