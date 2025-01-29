@@ -38,7 +38,7 @@ class World {
             this.checkThrowObjects();
             this.checkBottles();
             this.checkCoins();
-            this.checkGameOver();  // Überprüfung, ob der Charakter tot ist
+            this.checkGameOver();  
         }, 200);
     }
 

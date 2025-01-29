@@ -37,9 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     menuButton.addEventListener('click', () => {
         window.location.href = 'index.html'; 
     });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     const soundButton = document.getElementById('soundButton');
     const soundButtonImage = soundButton.querySelector('img');
     soundButton.addEventListener('click', () => {
@@ -48,46 +46,45 @@ document.addEventListener('DOMContentLoaded', () => {
         soundEnabled ? sound_Game.play() : (sound_Game.pause(), sound_Game.currentTime = 0);
         world?.moveableObjects?.forEach(obj => obj.toggleSounds(soundEnabled));
     });
+
+    setupMobileControls();
 });
 
+function setupMobileControls() {
+    setupTouchControl('btn-left', 'LEFT');
+    setupTouchControl('btn-right', 'RIGHT');
+    setupTouchControl('btn-jump', 'SPACE');
+    setupTouchControl('btn-throw', 'D');
+}
+
+function setupTouchControl(buttonId, key) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard[key] = true;
+        });
+        button.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keyboard[key] = false;
+        });
+    }
+}
+
 window.addEventListener('keydown', (e) => {
-
-    if (e.keyCode == 39)
-        keyboard.RIGHT = true;
-
-    if (e.keyCode == 37)
-        keyboard.LEFT = true;
-
-    if (e.keyCode == 38)
-        keyboard.UP = true;
-
-    if (e.keyCode == 40)
-        keyboard.DOWN = true;
-
-    if (e.keyCode == 32)
-        keyboard.SPACE = true;
-
-    if (e.keyCode == 68)
-        keyboard.D = true;
+    if (e.keyCode == 39) keyboard.RIGHT = true;
+    if (e.keyCode == 37) keyboard.LEFT = true;
+    if (e.keyCode == 38) keyboard.UP = true;
+    if (e.keyCode == 40) keyboard.DOWN = true;
+    if (e.keyCode == 32) keyboard.SPACE = true;
+    if (e.keyCode == 68) keyboard.D = true;
 });
 
 window.addEventListener('keyup', (e) => {
-
-    if (e.keyCode == 39)
-        keyboard.RIGHT = false;
-
-    if (e.keyCode == 37)
-        keyboard.LEFT = false;
-
-    if (e.keyCode == 38)
-        keyboard.UP = false;
-
-    if (e.keyCode == 40)
-        keyboard.DOWN = false;
-
-    if (e.keyCode == 32)
-        keyboard.SPACE = false;
-
-    if (e.keyCode == 68)
-        keyboard.D = false;
+    if (e.keyCode == 39) keyboard.RIGHT = false;
+    if (e.keyCode == 37) keyboard.LEFT = false;
+    if (e.keyCode == 38) keyboard.UP = false;
+    if (e.keyCode == 40) keyboard.DOWN = false;
+    if (e.keyCode == 32) keyboard.SPACE = false;
+    if (e.keyCode == 68) keyboard.D = false;
 });
