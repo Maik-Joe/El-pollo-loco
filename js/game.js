@@ -14,11 +14,13 @@ function init() {
 document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('startButton');
     const coveredImage = document.querySelector('.coveredImage');
+    const startInfo = document.getElementById('startInfo');
     startButton.addEventListener('click', () => {
         setTimeout(() => {
-            if (coveredImage && startButton) {
+            if (coveredImage && startButton && startInfo) {
                 coveredImage.style.display = 'none';
                 startButton.style.display = 'none';
+                startInfo.style.display = 'none';
             }
         }, 1000);
         if (soundEnabled) sound_Game.play();
@@ -38,14 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'index.html'; 
     });
 
-    const soundButton = document.getElementById('soundButton');
-    const soundButtonImage = soundButton.querySelector('img');
-    soundButton.addEventListener('click', () => {
+    const buttons = [document.getElementById('soundButton'), document.getElementById('soundButton2')];
+    let soundEnabled = true;
+    buttons.forEach(button => button.addEventListener('click', () => {
         soundEnabled = !soundEnabled;
-        soundButtonImage.src = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
+        const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
+        buttons.forEach(btn => btn.querySelector('img').src = newSrc);
         soundEnabled ? sound_Game.play() : (sound_Game.pause(), sound_Game.currentTime = 0);
         world?.moveableObjects?.forEach(obj => obj.toggleSounds(soundEnabled));
-    });
+    }));
+    
 
     setupMobileControls();
 });

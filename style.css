@@ -11,6 +11,7 @@
 
 body {
     display: flex;
+    overflow: hidden;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -137,7 +138,7 @@ h1 {
     width: 100%;
 }
 
-.mobile-buttons button{
+.mobile-buttons button {
     border: none;
     background-color: rgba(240, 248, 255, 0);
 }
@@ -152,6 +153,17 @@ h1 {
     display: flex;
     gap: 4px;
     margin-right: 20px;
+}
+
+.descriptionMobile {
+    display: none;
+    bottom: 0;
+    position: absolute;
+    z-index: 1200;
+    font-size: 24px;
+    color: rgba(177, 5, 5, 0.925);
+    text-shadow: 1px 1px 0 white, -1px 1px 0 white, 1px -1px 0 white, -1px -1px 0 white;
+    gap: 32px;
 }
 
 video {
@@ -207,11 +219,14 @@ video {
 
 @media only screen and (max-height: 580px) {
 
+    .descriptionMobile {
+        display: flex;
+    }
+
     video {
         display: none;
     }
 
- 
     .button {
         width: 150px;
         height: 40px;
@@ -227,6 +242,7 @@ video {
 
     canvas {
         height: 100vh;
+        width: 100%;
         background-color: none;
         border: none;
         border-radius: unset;
@@ -241,8 +257,12 @@ video {
         display: none;
     }
 
-    .coveredImage {
+    .insideWrapper {
         height: 100vh;
+    }
+
+    .outsideWrapper {
+        width: 100%;
     }
 
     h1 {
