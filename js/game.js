@@ -38,6 +38,33 @@ function init() {
     world = new World(canvas, keyboard);
 }
 
+/**
+ * Wechselt in den Fullscreen-Modus.
+ */
+/**
+ * Wechselt in den Fullscreen-Modus und erzwingt Querformat.
+ */
+function toggleFullscreen() {
+    let gameContainer = document.documentElement; // Ganze Seite als Fullscreen
+    
+    // Versuche, das Querformat zu aktivieren
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {
+        });
+    }
+
+    // Fullscreen-Modus aktivieren
+    if (gameContainer.requestFullscreen) {
+        gameContainer.requestFullscreen();
+    } else if (gameContainer.mozRequestFullScreen) { // Firefox
+        gameContainer.mozRequestFullScreen();
+    } else if (gameContainer.webkitRequestFullscreen) { // Chrome, Safari, Edge
+        gameContainer.webkitRequestFullscreen();
+    } else if (gameContainer.msRequestFullscreen) { // IE/Edge
+        gameContainer.msRequestFullscreen();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     /**
      * Startet das Spiel, blendet das Startmenü aus und spielt Musik.
@@ -48,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (startButton) {
         startButton.addEventListener('click', () => {
+            toggleFullscreen(); // Fullscreen-Modus aktivieren
+
             setTimeout(() => {
                 if (coveredImage && startButton && startInfo) {
                     coveredImage.style.display = 'none';
@@ -55,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     startInfo.style.display = 'none';
                 }
             }, 1000);
+
             if (soundEnabled) sound_Game.play();
             init();
         });
@@ -97,14 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
             soundEnabled = !soundEnabled;
             const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
             buttons.forEach(btn => btn.querySelector('img').src = newSrc);
-    
+
             if (soundEnabled) {
                 sound_Game.play();
             } else {
                 sound_Game.pause();
                 sound_Game.currentTime = 0;
             }
-    
+
             AudioManager.toggleSounds(soundEnabled);
         });
     });
@@ -186,4 +216,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
