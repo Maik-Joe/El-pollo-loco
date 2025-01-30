@@ -155,14 +155,28 @@ function toggleFullscreen() {
  * Toggles the visibility of the overlay.
  */
 function toggleOverlayImp() {
-    let overlay = document.getElementById("overlay-imp");
+    const overlay = document.getElementById("overlay-imp");
+    const impressumBtn = document.getElementById("impressum");
+    const closeBtn = document.getElementById("close");
 
-    if (overlay.style.display === "flex") {
+    // Ermittle den aktuellen Anzeigestatus des Overlays
+    const overlayDisplay = window.getComputedStyle(overlay).display;
+
+    if (overlayDisplay === "flex") {
+        // Overlay verstecken
         overlay.style.display = "none";
+        // Zeige Impressum-Button und verstecke Close-Button
+        impressumBtn.style.display = "block";
+        closeBtn.style.display = "none";
     } else {
+        // Overlay anzeigen
         overlay.style.display = "flex";
+        // Verstecke Impressum-Button und zeige Close-Button
+        impressumBtn.style.display = "none";
+        closeBtn.style.display = "block";
     }
 }
+
 
 /**
  * Listens for keydown events and updates keyboard state.
@@ -191,3 +205,22 @@ window.addEventListener('keyup', (e) => {
         case 68: keyboard.D = false; break;
     }
 });
+
+/**
+ * Blend Overlay Video.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const overlayStartButton = document.getElementById("overlay-start");
+    const overlay = document.getElementById("overlay");
+    const video = document.getElementById("myVideo");
+
+    if (overlayStartButton) {
+        overlayStartButton.addEventListener("click", function () {
+            if (overlay) overlay.style.display = "none";
+            if (video) {
+                video.play().catch(() => {});
+            }
+        });
+    }
+});
+
