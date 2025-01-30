@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html translate="no" lang="en">
-
 <head>
-    <!-- Grundlegende Meta-Informationen und Verweise auf CSS/JS-Dateien -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El pollo loco</title>
     <link rel="icon" type="image/x-icon" href="img/6_salsa_bottle/salsa_bottle.png">
     <link rel="stylesheet" href="style.css">
-
-    <!-- Einbinden aller benötigten Skripte für das Spiel -->
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
     <script src="models/character.class.js"></script>
@@ -34,55 +30,100 @@
 </head>
 
 <body>
-
-    <!-- Overlay mit Start-Button -->
     <div class="overlay-video" id="overlay">
         <button id="overlay-start">START</button>
     </div>
 
-    <!-- Hintergrundvideo -->
     <video id="myVideo" loop>
         <source src="video/240570_medium.mp4" type="video/mp4">
         Dein Browser unterstützt kein HTML5-Video.
     </video>
 
-    <!-- Spieltitel -->
     <h1>EL POLLO LOCO</h1>
 
     <div class="outsideWrapper">
-        <!-- Start- und Neustart-Buttons sowie Menübutton -->
         <button class="button" style="z-index: 100;" id="startButton">START GAME</button>
         <button class="button" style="display: none;" id="restartButton">RESTART GAME</button>
         <button style="display: none;" id="menuButton">MENU</button>
 
         <div class="insideWrapper">
-            <!-- Überlagernde Bilder für Start-, GameOver- und Gewinn-Screens -->
-            <img id="startScreen" src="img/9_intro_outro_screens/start/startscreen_1.png" style="z-index: 99;"
-                class="coveredImage">
-            <img id="gameOverScreen" src="img/9_intro_outro_screens/game_over/oh no you lost!.png" class="coveredImage"
-                style="display: none;">
-            <img id="winScreen" src="img/9_intro_outro_screens/win/win_2.png" class="coveredImage"
-                style="display: none;">
+            <div id="overlay-imp" class="overlay-imp">
+                <p>
+                    Impressum<br><br>
+                    Sanchez Joe<br>
+                    Los Torreros 42<br>
+                    98765 Torrero<br>
+                    Mexico<br><br>
+                    E-Mail: contact@sanchejoe.com<br><br>
+                    Verantwortlich für den Inhalt: Sanchez Joe
+                </p>
+            </div>
 
-            <!-- Canvas, auf dem das Spiel gerendert wird -->
+            <img
+                id="fullscreen"
+                class="fullscreen"
+                src="img/buttons/fullscreen.png"
+                width="24px"
+                height="24px"
+            >
+            <img
+                id="impressum"
+                class="impressum"
+                onclick="toggleOverlayImp()"
+                src="img/buttons/information.png"
+                width="24px"
+                height="24px"
+            >
+            <img
+                id="startScreen"
+                src="img/9_intro_outro_screens/start/startscreen_1.png"
+                style="z-index: 99;"
+                class="coveredImage"
+            >
+            <img
+                id="gameOverScreen"
+                src="img/9_intro_outro_screens/game_over/oh no you lost!.png"
+                class="coveredImage"
+                style="display: none;"
+            >
+            <img
+                id="winScreen"
+                src="img/9_intro_outro_screens/win/win_2.png"
+                class="coveredImage"
+                style="display: none;"
+            >
+
             <canvas id="canvas" width="720px" height="480px"></canvas>
 
-            <!-- Mobile Buttons zur Steuerung auf Smartphones -->
             <div class="mobile-buttons">
                 <div class="left-action">
-                    <button id="btn-left"><img src="img/buttons/left-28998_1280.png" width="32px"
-                            height="auto"></button>
-                    <button id="btn-right"><img src="img/buttons/arrow-30330_1280.png" width="32px"
-                            height="auto"></button>
+                    <button id="btn-left">
+                        <img src="img/buttons/left-28998_1280.png" width="32px" height="auto">
+                    </button>
+                    <button id="btn-right">
+                        <img src="img/buttons/arrow-30330_1280.png" width="32px" height="auto">
+                    </button>
                 </div>
-                <div>
+                <div class="middle-action">
                     <button class="soundButtonMobile" id="soundButton">
                         <img src="img/high-volume (1).png" width="24px">
                     </button>
+                    <img
+                        id="fullscreenMobile"
+                        class="fullscreenMobile"
+                        onclick="toggleFullscreen()"
+                        src="img/buttons/fullscreen.png"
+                        width="24px"
+                        height="24px"
+                    >
                 </div>
                 <div class="right-action">
                     <button id="btn-jump">
-                        <img src="img/buttons/button-29139_1280.png" width="32px" height="auto">
+                        <img
+                            src="img/buttons/button-29139_1280.png"
+                            width="32px"
+                            height="auto"
+                        >
                     </button>
                     <button id="btn-throw" class="throw">
                         <img src="img/6_salsa_bottle/salsa_bottle.png" width="42" height="auto">
@@ -92,7 +133,6 @@
         </div>
     </div>
 
-    <!-- Steuerungshinweise (Desktop-Version) -->
     <div class="description">
         <button class="soundButton" id="soundButton2">
             <img src="img/high-volume (1).png" width="32px" height="auto">
@@ -102,12 +142,10 @@
         <p>D = Throw Bottle</p>
     </div>
 
-    <!-- Steuerungshinweise (Mobile-Version) -->
     <div id="startInfo" class="descriptionMobile">
         <p>Arrow Left/Right = Walk</p>
         <p>Arrow Up = Jump</p>
         <p>Bottle = Throw Bottle</p>
     </div>
 </body>
-
 </html>

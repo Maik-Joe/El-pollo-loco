@@ -1,47 +1,17 @@
-/**************************************************************
- * Repräsentiert ein Level, das verschiedene Elemente wie Gegner, 
- * Wolken, Hintergrundobjekte, Flaschen und Münzen enthält.
- **************************************************************/
 class Level {
-
-    /**
-     * Liste der Gegner im Level.
-     * @type {MoveableObject[]}
-     */
     enemies;
-
-    /**
-     * Liste der Wolken im Level.
-     * @type {MoveableObject[]}
-     */
     clouds;
-
-    /**
-     * Liste der Hintergrundobjekte.
-     * @type {DrawableObject[]}
-     */
     backgroundObjects;
-
-    /**
-     * Liste der Flaschen, die im Level verteilt sind.
-     * @type {MoveableObject[]}
-     */
     bottles;
-
-    /**
-     * Liste der Münzen, die im Level gesammelt werden können.
-     * @type {MoveableObject[]}
-     */
     coins;
 
     /**
-     * Erzeugt eine neue Instanz eines Levels mit den angegebenen Elementen.
-     * 
-     * @param {MoveableObject[]} enemies - Die Gegner im Level.
-     * @param {MoveableObject[]} clouds - Die Wolken im Level.
-     * @param {MoveableObject[]} bottles - Die Flaschen, die eingesammelt werden können.
-     * @param {MoveableObject[]} coins - Die Münzen, die eingesammelt werden können.
-     * @param {DrawableObject[]} backgroundObjects - Die Objekte im Hintergrund.
+     * Creates a new level instance with the specified elements.
+     * @param {MoveableObject[]} enemies - The enemies in the level.
+     * @param {MoveableObject[]} clouds - The clouds in the level.
+     * @param {MoveableObject[]} bottles - The collectible bottles in the level.
+     * @param {MoveableObject[]} coins - The collectible coins in the level.
+     * @param {DrawableObject[]} backgroundObjects - The background objects in the level.
      */
     constructor(enemies, clouds, bottles, coins, backgroundObjects) {
         this.enemies = enemies;
@@ -52,8 +22,7 @@ class Level {
     }
 
     /**
-     * Setzt alle Elemente des Levels zurück, indem die entsprechenden 
-     * Arrays geleert werden.
+     * Resets all level elements by clearing their respective arrays.
      */
     reset() {
         this.enemies = [];

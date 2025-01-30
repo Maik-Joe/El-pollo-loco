@@ -1,37 +1,20 @@
-/************************************************************
- * Repräsentiert die Lebensanzeige (Statusbalken) des Endbosses.
- * @extends DrawableObject
- ************************************************************/
 class EndbossBar extends DrawableObject {
-
-    /**
-     * Bildpfade für die verschiedenen Zustände der Endboss-Gesundheitsanzeige.
-     * @type {string[]}
-     */
+    
     Images_Health = [
         'img/7_statusbars/2_statusbar_endboss/blue/blue0.png',
         'img/7_statusbars/2_statusbar_endboss/blue/blue20.png',
         'img/7_statusbars/2_statusbar_endboss/blue/blue40.png',
         'img/7_statusbars/2_statusbar_endboss/blue/blue60.png',
         'img/7_statusbars/2_statusbar_endboss/blue/blue80.png',
-        'img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
+        'img/7_statusbars/2_statusbar_endboss/blue/blue100.png'
     ];
 
-    /**
-     * Prozentualer Wert der aktuellen Endboss-Gesundheit (0-100).
-     * @type {number}
-     */
     percentage = 100;
-
-    /**
-     * Numerischer Wert der Endboss-Gesundheit (kann für weitere Funktionen verwendet werden).
-     * @type {number}
-     */
     energy = 100;
 
     /**
-     * Erzeugt eine neue Endboss-Lebensanzeige, lädt die passenden Bilder
-     * und initialisiert die Positions- und Größenwerte.
+     * Creates a new Endboss health bar, loads the relevant images,
+     * and sets initial position and size values.
      */
     constructor() {
         super();
@@ -44,13 +27,10 @@ class EndbossBar extends DrawableObject {
     }
 
     /**
-     * Setzt den prozentualen Wert der Endboss-Gesundheit und
-     * aktualisiert das entsprechende Bild in der Anzeige.
-     * 
-     * @param {number} percentage - Neuer Prozentwert (0 - 100).
+     * Sets the Endboss health percentage and updates the displayed image.
+     * @param {number} percentage - A new percentage value (0 - 100).
      */
     setPercentage(percentage) {
-        // Beschränkt den Wert zwischen 0 und 100
         percentage = Math.max(0, Math.min(100, percentage));
         let index = this.resolveImageIndex(percentage);
         let path = this.Images_Health[index];
@@ -58,10 +38,9 @@ class EndbossBar extends DrawableObject {
     }
 
     /**
-     * Ermittelt den Index des anzuzeigenden Bildes basierend auf dem Prozentsatz.
-     * 
-     * @param {number} percentage - Der aktuelle Prozentwert der Endboss-Gesundheit (0 - 100).
-     * @returns {number} Index des zu verwendenden Bildes aus dem Array {@link Images_Health}.
+     * Determines the index of the image to display based on the given percentage.
+     * @param {number} percentage - Current health percentage (0 - 100).
+     * @returns {number} The index of the image from {@link Images_Health}.
      */
     resolveImageIndex(percentage) {
         if (percentage === 100) {

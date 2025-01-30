@@ -1,14 +1,5 @@
-/************************************************************
- * Repräsentiert den Gesundheitsstatus (Lebensbalken) des 
- * Charakters oder einer Figur im Spiel.
- * @extends DrawableObject
- ************************************************************/
 class StatusBar extends DrawableObject {
-
-    /**
-     * Bildpfade für verschiedene Zustände der Lebensanzeige.
-     * @type {string[]}
-     */
+    
     Images_Health = [
         'img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
         'img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png',
@@ -18,15 +9,11 @@ class StatusBar extends DrawableObject {
         'img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png'
     ];
 
-    /**
-     * Prozentangabe des aktuellen Gesundheitszustands (0-100).
-     * @type {number}
-     */
     percentage = 100;
 
     /**
-     * Erstellt eine neue StatusBar-Instanz, lädt die passenden Bilder
-     * und initialisiert ihren Prozentwert, Position und Größe.
+     * Creates a new StatusBar instance, loads its images,
+     * sets the initial percentage, and positions it on the screen.
      */
     constructor() {
         super();
@@ -39,10 +26,8 @@ class StatusBar extends DrawableObject {
     }
 
     /**
-     * Aktualisiert den aktuellen Prozentwert der Lebensanzeige
-     * und wählt das entsprechende Bild aus.
-     * 
-     * @param {number} percentage - Neuer Prozentwert (zwischen 0 und 100).
+     * Sets the current percentage of the health bar and updates the displayed image.
+     * @param {number} percentage - A value between 0 and 100.
      */
     setPercentage(percentage) {
         this.percentage = percentage;
@@ -51,10 +36,8 @@ class StatusBar extends DrawableObject {
     }
 
     /**
-     * Ermittelt anhand des aktuellen Prozentwerts, welches Bild
-     * angezeigt werden soll.
-     * 
-     * @returns {number} Index des zu verwendenden Bildes aus {@link Images_Health}.
+     * Determines which image to display based on the current percentage.
+     * @returns {number} The index of the image from {@link Images_Health}.
      */
     resolveImageIndex() {
         if (this.percentage === 100) {

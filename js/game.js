@@ -1,36 +1,13 @@
-/**
- * Die Spielfläche (Canvas) und die Spielwelt (World)
- * @type {HTMLCanvasElement}
- */
 let canvas;
-
-/**
- * Die Spielwelt
- * @type {World}
- */
 let world;
-
-/**
- * Tastatursteuerung
- * @type {Keyboard}
- */
 let keyboard = new Keyboard();
-
-/**
- * Gibt an, ob der Sound aktiviert ist
- * @type {boolean}
- */
 let soundEnabled = true;
-
-/**
- * Hintergrundmusik für das Spiel
- * @type {HTMLAudioElement}
- */
 let sound_Game = new Audio('audio/latin-traditional-music-spanish-mexican-background-intro-theme-258024.mp3');
 sound_Game.volume = 0.04;
+sound_Game.loop = true;
 
 /**
- * Initialisiert das Spiel, indem das Level geladen und die Welt erstellt wird.
+ * Initializes the game by loading the level and creating the world.
  */
 function init() {
     initLevel();
@@ -38,75 +15,22 @@ function init() {
     world = new World(canvas, keyboard);
 }
 
-/**
- * Wechselt in den Fullscreen-Modus.
- */
-/**
- * Wechselt in den Fullscreen-Modus und erzwingt Querformat.
- */
-function toggleFullscreen() {
-    let gameContainer = document.documentElement; // Ganze Seite als Fullscreen
-    
-    // Versuche, das Querformat zu aktivieren
-    if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {
-        });
-    }
-
-    // Fullscreen-Modus aktivieren
-    if (gameContainer.requestFullscreen) {
-        gameContainer.requestFullscreen();
-    } else if (gameContainer.mozRequestFullScreen) { // Firefox
-        gameContainer.mozRequestFullScreen();
-    } else if (gameContainer.webkitRequestFullscreen) { // Chrome, Safari, Edge
-        gameContainer.webkitRequestFullscreen();
-    } else if (gameContainer.msRequestFullscreen) { // IE/Edge
-        gameContainer.msRequestFullscreen();
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    /**
-     * Startet das Spiel, blendet das Startmenü aus und spielt Musik.
-     */
     const startButton = document.getElementById('startButton');
-    const coveredImage = document.querySelector('.coveredImage');
-    const startInfo = document.getElementById('startInfo');
-
     if (startButton) {
-        startButton.addEventListener('click', () => {
-            toggleFullscreen(); // Fullscreen-Modus aktivieren
-
-            setTimeout(() => {
-                if (coveredImage && startButton && startInfo) {
-                    coveredImage.style.display = 'none';
-                    startButton.style.display = 'none';
-                    startInfo.style.display = 'none';
-                }
-            }, 1000);
-
-            if (soundEnabled) sound_Game.play();
-            init();
-        });
+        startButton.addEventListener('click', handleStartButtonClick);
     }
 
-    /**
-     * Neustart-Funktion: Setzt die Welt zurück und startet sie neu.
-     */
     const restartButton = document.getElementById('restartButton');
     if (restartButton) {
-        restartButton.addEventListener('click', () => {
-            if (world) {
-                world.resetWorld();
-                sound_Game.play();
-                init();
-            }
-        });
+        restartButton.addEventListener('click', handleRestart);
     }
 
-    /**
-     * Navigiert zurück zum Hauptmenü.
-     */
+    const fullscreenButton = document.getElementById('fullscreen');
+    if (fullscreenButton) {
+        fullscreenButton.addEventListener('click', toggleFullscreen);
+    }
+
     const menuButton = document.getElementById('menuButton');
     if (menuButton) {
         menuButton.addEventListener('click', () => {
@@ -114,36 +38,73 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Steuerung für das Ein- und Ausschalten des Sounds.
-     */
-    const buttons = [
-        document.getElementById('soundButton'),
-        document.getElementById('soundButton2')
-    ].filter(Boolean); // Entfernt `null`-Elemente, falls ein Button nicht existiert
-
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
-            buttons.forEach(btn => btn.querySelector('img').src = newSrc);
-
-            if (soundEnabled) {
-                sound_Game.play();
-            } else {
-                sound_Game.pause();
-                sound_Game.currentTime = 0;
-            }
-
-            AudioManager.toggleSounds(soundEnabled);
-        });
-    });
-
+    setupSoundButtons();
     setupMobileControls();
 });
 
 /**
- * Initialisiert die mobile Steuerung
+ * Handles the start button click event.
+ */
+function handleStartButtonClick() {
+    setTimeout(() => {
+        const elements = [
+            document.querySelector('.coveredImage'),
+            document.getElementById('startButton'),
+            document.getElementById('startInfo'),
+            document.getElementById('impressum'),
+            document.getElementById('fullscreen')
+        ];
+        elements.forEach(el => { if (el) el.style.display = 'none'; });
+    }, 1000);
+
+    if (soundEnabled) sound_Game.play();
+    init();
+}
+
+/**
+ * Handles the restart button click event.
+ */
+function handleRestart() {
+    if (world) {
+        world.resetWorld();
+        init();
+    }
+}
+
+/**
+ * Sets up sound buttons and their event listeners.
+ */
+function setupSoundButtons() {
+    const buttons = [
+        document.getElementById('soundButton'),
+        document.getElementById('soundButton2')
+    ].filter(Boolean);
+
+    buttons.forEach(button => {
+        button.addEventListener('click', toggleSound);
+    });
+}
+
+/**
+ * Toggles sound on and off.
+ */
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
+    document.querySelectorAll('#soundButton img, #soundButton2 img')
+        .forEach(img => img.src = newSrc);
+
+    if (soundEnabled) {
+        sound_Game.play();
+    } else {
+        sound_Game.pause();
+        sound_Game.currentTime = 0;
+    }
+    AudioManager.toggleSounds(soundEnabled);
+}
+
+/**
+ * Sets up mobile control buttons.
  */
 function setupMobileControls() {
     setupTouchControl('btn-left', 'LEFT');
@@ -153,9 +114,9 @@ function setupMobileControls() {
 }
 
 /**
- * Verknüpft eine mobile Schaltfläche mit einer Tastatureingabe.
- * @param {string} buttonId - Die ID des Buttons.
- * @param {string} key - Die entsprechende Taste, die simuliert wird.
+ * Binds a mobile button to a keyboard input.
+ * @param {string} buttonId - The ID of the button.
+ * @param {string} key - The corresponding key to simulate.
  */
 function setupTouchControl(buttonId, key) {
     const button = document.getElementById(buttonId);
@@ -172,7 +133,39 @@ function setupTouchControl(buttonId, key) {
 }
 
 /**
- * Hört auf Tastendrücke und setzt die zugehörigen Variablen auf `true`.
+ * Toggles fullscreen mode.
+ */
+function toggleFullscreen() {
+    let gameContainer = document.documentElement;
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+    }
+    if (gameContainer.requestFullscreen) {
+        gameContainer.requestFullscreen();
+    } else if (gameContainer.mozRequestFullScreen) {
+        gameContainer.mozRequestFullScreen();
+    } else if (gameContainer.webkitRequestFullscreen) {
+        gameContainer.webkitRequestFullscreen();
+    } else if (gameContainer.msRequestFullscreen) {
+        gameContainer.msRequestFullscreen();
+    }
+}
+
+/**
+ * Toggles the visibility of the overlay.
+ */
+function toggleOverlayImp() {
+    let overlay = document.getElementById("overlay-imp");
+
+    if (overlay.style.display === "flex") {
+        overlay.style.display = "none";
+    } else {
+        overlay.style.display = "flex";
+    }
+}
+
+/**
+ * Listens for keydown events and updates keyboard state.
  */
 window.addEventListener('keydown', (e) => {
     switch (e.keyCode) {
@@ -186,7 +179,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 /**
- * Hört auf das Loslassen von Tasten und setzt die Variablen auf `false`.
+ * Listens for keyup events and updates keyboard state.
  */
 window.addEventListener('keyup', (e) => {
     switch (e.keyCode) {
@@ -196,23 +189,5 @@ window.addEventListener('keyup', (e) => {
         case 40: keyboard.DOWN = false; break;
         case 32: keyboard.SPACE = false; break;
         case 68: keyboard.D = false; break;
-    }
-});
-
-/**
- * Blendet das Overlay aus und startet das Video.
- */
-document.addEventListener('DOMContentLoaded', () => {
-    const overlayStartButton = document.getElementById("overlay-start");
-    const overlay = document.getElementById("overlay");
-    const video = document.getElementById("myVideo");
-
-    if (overlayStartButton) {
-        overlayStartButton.addEventListener("click", function () {
-            if (overlay) overlay.style.display = "none";
-            if (video) {
-                video.play().catch(() => {});
-            }
-        });
     }
 });

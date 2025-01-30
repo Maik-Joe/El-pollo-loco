@@ -1,13 +1,5 @@
-/**
- * Repräsentiert eine Anzeige (Statusbalken) für gesammelte Münzen.
- * @extends DrawableObject
- */
 class CoinBar extends DrawableObject {
-
-    /**
-     * Bildpfade für den Münzbalken in verschiedenen Zuständen.
-     * @type {string[]}
-     */
+    
     Images_Coins = [
         'img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png',
         'img/7_statusbars/1_statusbar/1_statusbar_coin/green/20.png',
@@ -17,20 +9,16 @@ class CoinBar extends DrawableObject {
         'img/7_statusbars/1_statusbar/1_statusbar_coin/green/100.png'
     ];
 
-    /**
-     * Prozentwert der gesammelten Münzen (0% = kein Fortschritt, 100% = alles gesammelt).
-     * @type {number}
-     */
-    percentage = 0; 
+    percentage = 0;
 
     /**
-     * Erzeugt eine neue Münzleiste und lädt die entsprechenden Bilder.
-     * Setzt die Anfangsposition, Größe und startet bei 0%.
+     * Creates a new CoinBar, loads all relevant images, sets its initial position and size,
+     * and starts at 0% progress.
      */
     constructor() {
         super();
         this.loadImages(this.Images_Coins);
-        this.setPercentage(0); // Start auf 0%
+        this.setPercentage(0);
         this.x = 20;
         this.y = 90;
         this.width = 200;
@@ -38,8 +26,8 @@ class CoinBar extends DrawableObject {
     }
 
     /**
-     * Setzt den Prozentwert der Münzanzeige und aktualisiert entsprechend das angezeigte Bild.
-     * @param {number} percentage - Neuer Prozentsatz der gesammelten Münzen (0 - 100).
+     * Sets the percentage value of collected coins and updates the displayed image accordingly.
+     * @param {number} percentage - A new percentage value in the range of 0 to 100.
      */
     setPercentage(percentage) {
         this.percentage = percentage;
@@ -48,8 +36,8 @@ class CoinBar extends DrawableObject {
     }
 
     /**
-     * Ermittelt anhand des aktuellen Prozentwerts, welches Bild angezeigt werden soll.
-     * @returns {number} Index des zu verwendenden Bildes aus dem Array {@link Images_Coins}.
+     * Determines the array index of the image to display based on the current percentage value.
+     * @returns {number} The index of the image to use from the {@link Images_Coins} array.
      */
     resolveImageIndex() {
         if (this.percentage <= 0) {

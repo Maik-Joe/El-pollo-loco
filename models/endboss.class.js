@@ -1,11 +1,5 @@
-/************************************************************
- * Repräsentiert den Endboss des Spiels und regelt dessen 
- * Animationen sowie Interaktionen wie Schaden und Angriff.
- * @extends MoveableObject
- ************************************************************/
 class Endboss extends MoveableObject {
-
-    // Bilder für den Alarmzustand des Endbosses
+    
     Images_Alert = [
         'img/4_enemie_boss_chicken/2_alert/G5.png',
         'img/4_enemie_boss_chicken/2_alert/G6.png',
@@ -17,7 +11,6 @@ class Endboss extends MoveableObject {
         'img/4_enemie_boss_chicken/2_alert/G12.png'
     ];
 
-    // Bilder für den Angriffsmodus des Endbosses
     Images_Attack = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
         'img/4_enemie_boss_chicken/1_walk/G2.png',
@@ -33,37 +26,35 @@ class Endboss extends MoveableObject {
         'img/4_enemie_boss_chicken/3_attack/G20.png'
     ];
 
-    // Bilder für den Zustand des Endbosses, wenn er verletzt ist
     Images_Hurt = [
         'img/4_enemie_boss_chicken/4_hurt/G21.png',
         'img/4_enemie_boss_chicken/4_hurt/G22.png',
         'img/4_enemie_boss_chicken/4_hurt/G23.png'
     ];
 
-    // Bilder für den Zustand des Endbosses, wenn er tot ist
     Images_Dead = [
         'img/4_enemie_boss_chicken/5_dead/G24.png',
         'img/4_enemie_boss_chicken/5_dead/G25.png',
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    width = 250; // Breite des Endbosses
-    height = 300; // Höhe des Endbosses
-    y = 150; // Vertikale Position des Endbosses
-    speed = 5; // Geschwindigkeit des Endbosses
-    energy = 100; // Energie des Endbosses
+    width = 250;
+    height = 300;
+    y = 150;
+    speed = 5;
+    energy = 100;
 
-    intervalIDAnimation; // Interval-ID für die Animation
-
-    offset = { // Versatz für Kollisionsberechnungen
+    intervalIDAnimation;
+    offset = {
         top: 0,
         left: 75,
         right: 75,
-        bottom: 0,
+        bottom: 0
     };
 
     /**
-     * Konstruktor der Endboss-Klasse
+     * Creates a new Endboss instance, loads initial images,
+     * sets its position, and starts the animation.
      */
     constructor() {
         super().loadImage(this.Images_Alert[0]);
@@ -71,19 +62,18 @@ class Endboss extends MoveableObject {
         this.loadImages(this.Images_Attack);
         this.loadImages(this.Images_Hurt);
         this.loadImages(this.Images_Dead);
-        
-        this.x = 2300;  // Startposition des Endbosses
 
+        this.x = 2300;
         this.animate();
     }
 
     /**
-     * Animation des Endbosses
+     * Animates the Endboss depending on its current state:
+     * dead, hurt, attacking, or alert.
      */
     animate() {
         this.intervalIDAnimation = setInterval(() => {
             if (this.isDead()) {
-                // Boss-Sound pausieren, falls tot
                 AudioManager.pause('boss');
                 this.playAnimation(this.Images_Dead);
             } else if (this.isHurt()) {
@@ -97,31 +87,27 @@ class Endboss extends MoveableObject {
     }
 
     /**
-     * Überprüfen, ob der Endboss angreift
-     * @returns {boolean}
+     * Checks if the Endboss is in an attacking state.
+     * @returns {boolean} True if attacking, otherwise false.
      */
     isAttacking() {
-        // Beispiel: Wenn Energie < 90, Angriff
         if (this.energy < 90) {
-            this.speed = 15;
+            this.speed = 40;
             this.moveLeft();
         }
         return this.energy < 90;
     }
 
     /**
-     * Bewegung des Endbosses stoppen
+     * Stops the Endboss movement and plays the victory sound,
+     * then clears intervals to end the animation.
      */
     stopMovementEndboss() {
-        // Bei einem Sieg: "Win"-Sound abspielen
         AudioManager.play('win', 1);
-
         setTimeout(() => {
             this.speed = 0;
-            // Boss-Sound + Win-Sound wieder pausieren
             AudioManager.pause('boss');
             AudioManager.pause('win');
-            
             clearInterval(this.intervalIDAnimation);
         }, 2000);
     }

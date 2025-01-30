@@ -1,19 +1,7 @@
-/**
- * Ein zentraler Audio-Manager, der alle benötigten Audiodateien 
- * nur einmalig lädt und abspielt oder pausiert.
- */
 class AudioManager {
 
-    /**
-     * Bestimmt, ob Audios abgespielt werden dürfen oder nicht.
-     * @type {boolean}
-     */
     static isSoundEnabled = true;
-
-    /**
-     * Enthält alle verfügbaren Sounds als Schlüssel-Wert-Paar.
-     * @type {{ [key: string]: HTMLAudioElement }}
-     */
+    
     static sounds = {
         running: new Audio('audio/running-in-grass-6237_O3hpfyba.mp3'),
         coins: new Audio('audio/coin-recieved-230517_424ntki3.mp3'),
@@ -25,25 +13,22 @@ class AudioManager {
     };
 
     /**
-     * Spielt einen Sound ab, wenn Ton aktiviert ist und 
-     * die Audiodatei bereits geladen wurde.
-     * @param {string} soundName - Der Schlüsselname des Sounds im Sounds-Objekt.
-     * @param {number} [volume=1] - Optional, Lautstärke (0-1).
+     * Plays a sound if audio is enabled and the file is loaded.
+     * @param {string} soundName - The key name of the sound in the sounds object.
+     * @param {number} [volume=1] - Optional, volume level (0-1).
      */
     static play(soundName, volume = 1) {
         const sound = this.sounds[soundName];
-        if (!sound) return; // Ungültiger Soundname
-        
-        if (this.isSoundEnabled && sound.readyState >= 2) {
+        if (sound && this.isSoundEnabled && sound.readyState >= 2) {
             sound.pause();
             sound.volume = volume;
-            sound.play().catch(() => { /* Fehler still ignorieren */ });
+            sound.play().catch(() => {});
         }
     }
 
     /**
-     * Pausiert (stoppt) einen Sound, falls er gerade abgespielt wird.
-     * @param {string} soundName - Name des Sounds, der pausiert werden soll.
+     * Pauses a currently playing sound.
+     * @param {string} soundName - Name of the sound to pause.
      */
     static pause(soundName) {
         const sound = this.sounds[soundName];
@@ -54,13 +39,11 @@ class AudioManager {
     }
 
     /**
-     * Aktiviert oder deaktiviert alle Sounds. Beim Deaktivieren 
-     * werden alle Sounds pausiert.
-     * @param {boolean} enabled - true zum Aktivieren, false zum Deaktivieren.
+     * Toggles sound on or off. If disabled, stops all playing sounds.
+     * @param {boolean} enabled - true to enable sound, false to disable.
      */
     static toggleSounds(enabled) {
         this.isSoundEnabled = enabled;
-        // Bei Deaktivierung alle Sounds pausieren und zurücksetzen
         if (!enabled) {
             Object.values(this.sounds).forEach(sound => {
                 sound.pause();
@@ -69,4 +52,3 @@ class AudioManager {
         }
     }
 }
-

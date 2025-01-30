@@ -1,13 +1,5 @@
-/**
- * Repräsentiert die Flaschenanzeige im Spiel.
- * Erweitert die Klasse DrawableObject.
- */
 class BottleBar extends DrawableObject {
     
-    /**
-     * Bildpfade für die verschiedenen Füllstände der Flaschenanzeige
-     * @type {string[]}
-     */
     Images_Bottles = [ 
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/0.png',
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/20.png',
@@ -17,19 +9,15 @@ class BottleBar extends DrawableObject {
         'img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png'
     ];
 
-    /**
-     * Der aktuelle Füllstand der Flaschenanzeige in Prozent.
-     * @type {number}
-     */
-    percentage = 0; // Startwert für die Flaschenenergie
+    percentage = 0;
 
     /**
-     * Erstellt eine neue Flaschenanzeige.
+     * Creates a new bottle bar.
      */
     constructor() {
         super();
         this.loadImages(this.Images_Bottles);
-        this.setPercentage(0); // Start auf 0%
+        this.setPercentage(0);
         this.x = 20;
         this.y = 45;
         this.width = 200;
@@ -37,8 +25,8 @@ class BottleBar extends DrawableObject {
     }
 
     /**
-     * Setzt den Füllstand der Flaschenanzeige.
-     * @param {number} percentage - Der neue Füllstand in Prozent.
+     * Sets the fill level of the bottle bar.
+     * @param {number} percentage - The new fill level in percentage.
      */
     setPercentage(percentage) {
         this.percentage = percentage;
@@ -47,8 +35,8 @@ class BottleBar extends DrawableObject {
     }
 
     /**
-     * Bestimmt das Bild für den aktuellen Füllstand.
-     * @returns {number} Der Index des zu verwendenden Bildes in Images_Bottles.
+     * Determines the correct image index based on the current percentage.
+     * @returns {number} The index of the image to use in Images_Bottles.
      */
     resolveImageIndex() {
         if (this.percentage <= 0) {
@@ -62,7 +50,7 @@ class BottleBar extends DrawableObject {
         } else if (this.percentage <= 80) {
             return 4;
         } else {
-            return 5; // 100% Flaschenenergie
+            return 5;
         }
     }
 }

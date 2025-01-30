@@ -1,15 +1,5 @@
-/**
- * Repräsentiert den spielbaren Charakter (Pepe) im Spiel,
- * inklusive Animationen für Laufen, Springen, Schlafen,
- * Schaden und Tod.
- * @extends MoveableObject
- */
 class Character extends MoveableObject {
-
-    /**
-     * Bildpfade für die Lauf-Animation.
-     * @type {string[]}
-     */
+    
     Images_Walking = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -19,10 +9,6 @@ class Character extends MoveableObject {
         'img/2_character_pepe/2_walk/W-26.png'
     ];
 
-    /**
-     * Bildpfade für die Sprung-Animation.
-     * @type {string[]}
-     */
     Images_Jumping = [
         'img/2_character_pepe/3_jump/J-33.png',
         'img/2_character_pepe/3_jump/J-34.png',
@@ -32,10 +18,6 @@ class Character extends MoveableObject {
         'img/2_character_pepe/3_jump/J-38.png'
     ];
 
-    /**
-     * Bildpfade für die stehende (Idle) Animation.
-     * @type {string[]}
-     */
     Images_Standing = [
         'img/2_character_pepe/1_idle/idle/I-1.png',
         'img/2_character_pepe/1_idle/idle/I-2.png',
@@ -49,10 +31,6 @@ class Character extends MoveableObject {
         'img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
-    /**
-     * Bildpfade für die Schlaf-Animation (längerer Idle-Zustand).
-     * @type {string[]}
-     */
     Images_Sleeping = [
         'img/2_character_pepe/1_idle/long_idle/I-11.png',
         'img/2_character_pepe/1_idle/long_idle/I-12.png',
@@ -66,10 +44,6 @@ class Character extends MoveableObject {
         'img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
 
-    /**
-     * Bildpfade für die Todes-Animation.
-     * @type {string[]}
-     */
     Images_Dead = [
         'img/2_character_pepe/5_dead/D-51.png',
         'img/2_character_pepe/5_dead/D-52.png',
@@ -80,78 +54,33 @@ class Character extends MoveableObject {
         'img/2_character_pepe/5_dead/D-57.png'
     ];
 
-    /**
-     * Bildpfade für die Verletzungs-Animation.
-     * @type {string[]}
-     */
     Images_Hurt = [
         'img/2_character_pepe/4_hurt/H-41.png',
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png'
     ];
 
-    /**
-     * Objekt, das die Kollisionsgrenzen gegenüber
-     * der eigentlichen Bildgröße anpasst.
-     * @type {{ top: number, left: number, right: number, bottom: number }}
-     */
     offset = {
         top: 40,
         left: 25,
         right: 25,
-        bottom: 0,
+        bottom: -5,
     };
 
-    /**
-     * ID für das Intervall, das die Bewegungs-Updates steuert.
-     * @type {number|undefined}
-     */
     intervalIDMovement;
-
-    /**
-     * ID für das Intervall, das die Animations-Updates steuert.
-     * @type {number|undefined}
-     */
     intervalIDAnimation;
-
-    /**
-     * Referenz auf die Spielwelt, in der sich der Charakter befindet.
-     * @type {World}
-     */
     world;
-
-    /**
-     * Grundgeschwindigkeit des Charakters (horizontale Bewegung).
-     * @type {number}
-     */
     speed = 5;
-
-    /**
-     * Gibt an, ob die Sprung-Animation gerade abgespielt wird.
-     * @type {boolean}
-     */
     isJumpingAnimationPlaying = false;
-
-    /**
-     * Gibt an, ob der Charakter sich gerade im Schlaf-Modus befindet.
-     * @type {boolean}
-     */
     isSleeping = false;
-
-    /**
-     * Speichert den Zeitpunkt der letzten Bewegung (in Millisekunden),
-     * um zu überprüfen, ob der Charakter lange inaktiv war (Schlaf-Modus).
-     * @type {number}
-     */
     lastMovementTime = Date.now();
 
     /**
-     * Erzeugt eine neue Charakterinstanz,
-     * lädt alle benötigten Bilder und startet Animationsprozesse.
+     * Creates a new instance of the character, loads all necessary images,
+     * and initializes animations and gravity.
      */
     constructor() {
         super();
-        // Bilder laden
         this.loadImages(this.Images_Standing);
         this.loadImages(this.Images_Walking);
         this.loadImages(this.Images_Jumping);
@@ -165,72 +94,96 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Startet zwei Intervalle:
-     * 1) Interval für Bewegungsprüfungen (60x pro Sekunde)
-     * 2) Interval für Animationswechsel (10x pro Sekunde)
+     * Starts two intervals:
+     * 1) Movement checks at 60fps
+     * 2) Animation updates at 10fps
      */
     animate() {
         this.intervalIDMovement = setInterval(() => {
-            let isMoving = false;
-
-            // Rechts
-            if (this.world.keyboard.RIGHT && this.x < 2250) {
-                isMoving = this.moveRightAndPlaySound();
-            }
-            // Links
-            if (this.world.keyboard.LEFT && this.x > -600) {
-                isMoving = this.moveLeftAndPlaySound();
-            }
-            // Springen (nur wenn am Boden)
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-                isMoving = this.jumpAndPlaySound();
-            }
-
-            // Kamera verschieben
-            this.world.camera_x = -this.x + 100;
-
-            // Laufgeräusch nur abspielen, wenn tatsächlich Bewegung
-            if (!isMoving) {
-                // Sound stoppen
-                AudioManager.pause('running');
-            } else {
-                this.lastMovementTime = Date.now();
-                if (this.isSleeping) {
-                    this.isSleeping = false;
-                }
-            }
-
-            // Prüfen, ob Charakter einschläft
+            this.handleMovement();
+            this.updateCamera();
+            this.manageSound();
             this.checkForSleep();
-
         }, 1000 / 60);
 
         this.intervalIDAnimation = setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.Images_Dead);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.Images_Hurt);
-            } else if (this.isAboveGround()) {
-                // Sprung-Animation nur einmal durchlaufen
-                if (!this.isJumpingAnimationPlaying) {
-                    this.isJumpingAnimationPlaying = true;
-                    this.playAnimationOnce(this.Images_Jumping, () => {
-                        this.isJumpingAnimationPlaying = false;
-                    });
-                }
-            } else if (this.isSleeping) {
-                this.playAnimation(this.Images_Sleeping);
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.Images_Walking);
-            } else {
-                this.playAnimation(this.Images_Standing);
-            }
+            this.handleAnimation();
         }, 100);
     }
 
     /**
-     * Prüft, ob der Charakter einschläft,
-     * falls er seit 5 Sekunden (5000 ms) nicht mehr bewegt wurde.
+     * Handles the character's movement based on keyboard input.
+     * Updates the last movement time and sleep state accordingly.
+     */
+    handleMovement() {
+        let isMoving = false;
+
+        if (this.world.keyboard.RIGHT && this.x < 2250) {
+            isMoving = this.moveRightAndPlaySound();
+        }
+        if (this.world.keyboard.LEFT && this.x > -600) {
+            isMoving = this.moveLeftAndPlaySound();
+        }
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            isMoving = this.jumpAndPlaySound();
+        }
+
+        this.lastMovementTime = isMoving ? Date.now() : this.lastMovementTime;
+        this.isSleeping = isMoving ? false : this.isSleeping;
+    }
+
+    /**
+     * Updates the camera position relative to the character's current x position.
+     */
+    updateCamera() {
+        this.world.camera_x = -this.x + 100;
+    }
+
+    /**
+     * Pauses the running sound when the character is not moving.
+     */
+    manageSound() {
+        if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
+            AudioManager.pause('running');
+        }
+    }
+
+    /**
+     * Chooses which animation sequence should be played
+     * based on the character's current state.
+     */
+    handleAnimation() {
+        if (this.isDead()) {
+            this.playAnimation(this.Images_Dead);
+        } else if (this.isHurt()) {
+            this.playAnimation(this.Images_Hurt);
+        } else if (this.isAboveGround()) {
+            this.playJumpingAnimation();
+        } else if (this.isSleeping) {
+            this.playAnimation(this.Images_Sleeping);
+        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.Images_Walking);
+        } else {
+            this.playAnimation(this.Images_Standing);
+        }
+    }
+
+    /**
+     * Plays the jumping animation once if it's not already active,
+     * then resets the jump animation flag.
+     */
+    playJumpingAnimation() {
+        if (!this.isJumpingAnimationPlaying) {
+            this.isJumpingAnimationPlaying = true;
+            this.playAnimationOnce(this.Images_Jumping, () => {
+                this.isJumpingAnimationPlaying = false;
+            });
+        }
+    }
+
+    /**
+     * Checks if the character should enter sleep mode
+     * if there has been no movement for more than 5 seconds.
      */
     checkForSleep() {
         if (!this.isSleeping && Date.now() - this.lastMovementTime > 5000) {
@@ -239,10 +192,10 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Spielt eine angegebene Animation einmalig ab und führt optional
-     * eine Callback-Funktion aus, wenn sie beendet ist.
-     * @param {string[]} images - Array mit den Bildpfaden für die Animation.
-     * @param {Function} [callback] - Optionaler Rückruf nach Ende der Animation.
+     * Plays a given animation once and optionally executes a callback
+     * function when the animation finishes.
+     * @param {string[]} images - Array of image paths for the animation.
+     * @param {Function} [callback] - Optional callback executed after the animation ends.
      */
     playAnimationOnce(images, callback) {
         let currentImageIndex = 0;
@@ -257,46 +210,39 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Bewegt den Charakter nach rechts
-     * und startet das Laufgeräusch.
-     * @returns {boolean} true, wenn sich der Charakter bewegt.
+     * Moves the character to the right and plays the running sound.
+     * @returns {boolean} True if the character is moving.
      */
     moveRightAndPlaySound() {
         this.moveRight();
         this.otherDirection = false;
-        // Lauf-Sound
-        AudioManager.play('running', 0.4); // z.B. etwas leiser
+        AudioManager.play('running', 0.4);
         return true;
     }
 
     /**
-     * Bewegt den Charakter nach links
-     * und startet das Laufgeräusch.
-     * @returns {boolean} true, wenn sich der Charakter bewegt.
+     * Moves the character to the left and plays the running sound.
+     * @returns {boolean} True if the character is moving.
      */
     moveLeftAndPlaySound() {
         this.moveLeft();
         this.otherDirection = true;
-        // Lauf-Sound
         AudioManager.play('running', 0.8);
         return true;
     }
 
     /**
-     * Lässt den Charakter springen
-     * und spielt optional ein Sprunggeräusch ab.
-     * @returns {boolean} true, wenn sich der Charakter bewegt.
+     * Makes the character jump and optionally plays a jump sound.
+     * @returns {boolean} True if the character initiates a jump.
      */
     jumpAndPlaySound() {
         this.jump();
-        // ggf. Sprung-Sound ergänzen (wenn du eine extra MP3 hast)
-        // AudioManager.play('jumpSound', 0.5);
+        // AudioManager.play('jumpSound', 0.5); // Uncomment if a jump sound is available
         return true;
     }
 
     /**
-     * Stoppt die Bewegung und Animation des Charakters.
-     * Pausiert zusätzlich das Laufgeräusch.
+     * Stops character movement, pauses the running sound, and clears intervals.
      */
     stopMovement() {
         this.speed = 0;
@@ -308,8 +254,8 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Setzt die Charakterposition und relevante Eigenschaften zurück,
-     * sodass ein Neustart möglich ist.
+     * Resets the character's position, speed, and state,
+     * allowing for a new start.
      */
     reset() {
         this.x = 0;

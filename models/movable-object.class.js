@@ -1,17 +1,14 @@
-/**
- * Eine Klasse, die ein bewegliches Objekt darstellt, das von DrawableObject erbt
- */
 class MoveableObject extends DrawableObject {
 
-    // Attribute
-    speed = 0.15; // Geschwindigkeit des Objekts
-    otherDirection = false; // Objektrichtung
-    isSoundEnabled = true; // Sound ist aktiviert oder nicht
-    speedY = 0; // Vertikale Geschwindigkeit
-    acceleration = 2; // Beschleunigung
-    energy = 100; // Energie des Objekts
-    lastHit = 0; // Zeitpunkt des letzten Treffers
-    offset = { // Versatz für Kollisionsberechnungen
+    speed = 0.15;
+    otherDirection = false;
+    isSoundEnabled = true;
+    speedY = 0;
+    acceleration = 2;
+    energy = 100;
+    lastHit = 0;
+    
+    offset = {
         top: 0,
         left: 0,
         right: 0,
@@ -19,8 +16,7 @@ class MoveableObject extends DrawableObject {
     };
 
     /**
-     * Schwerkraft anwenden
-     * Objekte fallen lassen, wenn sie in der Luft sind
+     * Applies gravity to the object, making it fall if it is above the ground.
      */
     applyGravity() {
         setInterval(() => {
@@ -28,7 +24,6 @@ class MoveableObject extends DrawableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                // Objekt erreicht den Boden
                 this.y = 230;
                 this.speedY = 0;
             }
@@ -36,8 +31,8 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Überprüfen, ob das Objekt über dem Boden ist
-     * @returns {boolean}
+     * Checks if the object is above the ground.
+     * @returns {boolean} True if above the ground, otherwise false.
      */
     isAboveGround() {
         const groundLevel = 230;
@@ -49,65 +44,73 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Überprüfen, ob das Objekt mit einem anderen Objekt kollidiert
-     * @param {Object} mo - Ein anderes bewegliches Objekt
-     * @returns {boolean}
+     * Checks if this object is colliding with another moveable object.
+     * @param {Object} mo - The other moveable object.
+     * @returns {boolean} True if colliding, otherwise false.
      */
     isColliding(mo) {
-        const isXColliding = 
+        const isXColliding =
             this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
             this.x + this.offset.left < mo.x + mo.width - mo.offset.right;
-        
-        const isYColliding = 
+
+        const isYColliding =
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
-        if (isXColliding && isYColliding && 
-            (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)) {
+        if (
+            isXColliding &&
+            isYColliding &&
+            (mo instanceof ChickenSmall || mo instanceof Chicken || mo instanceof Endboss)
+        ) {
             this.processCollisionWithChicken(mo);
         }
+
         return isXColliding && isYColliding;
     }
 
     /**
-     * Verarbeiten der Kollision mit einem Huhn
-     * @param {Object} mo - Ein Huhn-Objekt
+     * Processes collision with a chicken (or chicken-like enemy).
+     * @param {Object} mo - A chicken object.
      */
     processCollisionWithChicken(mo) {
-        if (!mo.isDead() && !this.isInAir()) {
-            if (mo instanceof Endboss) {
-                this.getHitBoss();
+        if (!mo.isDead()) {
+            if (this.isCollidingJump(mo)) {
+                mo.takeDamage();
             } else {
-                this.hit();
+                if (mo instanceof Endboss) {
+                    this.getHitBoss();
+                } else {
+                    this.hit();
+                }
             }
         }
     }
 
     /**
-     * Überprüfen, ob das Objekt mit einem werfbaren Objekt kollidiert
-     * @param {Object} enemy - Ein feindliches Objekt
-     * @returns {boolean}
+     * Checks if this object is colliding with a throwable object.
+     * @param {Object} enemy - The throwable object (enemy).
+     * @returns {boolean} True if colliding, otherwise false.
      */
     isCollidingWithThrowableObject(enemy) {
-        const isXColliding = 
+        const isXColliding =
             this.x + this.width - this.offset.right > enemy.x + enemy.offset.left &&
             this.x + this.offset.left < enemy.x + enemy.width - enemy.offset.right;
-        
-        const isYColliding = 
+
+        const isYColliding =
             this.y + this.height - this.offset.bottom > enemy.y + enemy.offset.top &&
             this.y + this.offset.top < enemy.y + enemy.height - enemy.offset.bottom;
 
         if (isXColliding && isYColliding) {
-            this.playSplashAnimation(); // Falls du einen Splash-Effekt hast
+            this.playSplashAnimation?.(); // Call splash animation if it exists
             return true;
         }
         return false;
     }
 
     /**
-     * Überprüfen, ob das Objekt beim Sprung kollidiert
-     * @param {Object} mo - Ein bewegliches Objekt
-     * @returns {boolean}
+     * Checks collision specifically when jumping on an object.
+     * @param {Object} mo - A moveable object.
+     * @returns {boolean} True if colliding during a jump, otherwise false.
      */
     isCollidingJump(mo) {
         const groundLevel = 230;
@@ -115,7 +118,8 @@ class MoveableObject extends DrawableObject {
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
 
-        if (isYColliding && !mo.isDead() && this.isInAir() && this.y < groundLevel) {
+        // Must be falling down (speedY < 0) and above ground
+        if (isYColliding && !mo.isDead() && this.speedY < 0 && this.y < groundLevel) {
             mo.takeDamage();
             return true;
         }
@@ -123,11 +127,12 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Das Objekt erleidet einen Treffer
+     * Causes this object to take a hit, reducing energy.
+     * Plays a hurt sound and updates the status bar.
      */
     hit() {
         if (this.isDead()) return;
-        this.energy -= 5;
+        this.energy -= 3;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -138,10 +143,10 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Das Objekt erleidet einen Treffer vom Boss
+     * Causes this object to take a boss-level hit.
      */
     getHitBoss() {
-        this.energy -= 50;
+        this.energy -= 100;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
@@ -151,7 +156,7 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Flaschen aufsammeln
+     * Picks up bottles, increasing the bottle bar percentage and playing a sound.
      */
     pickBottles() {
         this.bottleBar.percentage += 20;
@@ -159,12 +164,11 @@ class MoveableObject extends DrawableObject {
             this.bottleBar.percentage = 100;
         }
         this.bottleBar.setPercentage(this.bottleBar.percentage);
-        // Sound abspielen
         AudioManager.play('bottle', 0.1);
     }
 
     /**
-     * Münzen aufsammeln
+     * Picks up coins, increasing the coin bar percentage and playing a sound.
      */
     pickCoins() {
         this.coinBar.percentage += 20;
@@ -172,23 +176,22 @@ class MoveableObject extends DrawableObject {
             this.coinBar.percentage = 100;
         }
         this.coinBar.setPercentage(this.coinBar.percentage);
-        // Sound abspielen
         AudioManager.play('coins', 0.1);
     }
 
     /**
-     * Überprüfen, ob das Objekt verletzt ist
-     * @returns {boolean}
+     * Checks if this object is currently in a hurt state.
+     * @returns {boolean} True if hurt, otherwise false.
      */
     isHurt() {
-        let timepassed = new Date().getTime() - this.lastHit; 
+        let timepassed = new Date().getTime() - this.lastHit;
         timepassed = timepassed / 1000;
         return timepassed < 0.8;
     }
 
     /**
-     * Das Objekt nimmt Schaden
-     * @param {number} damage - Die Schadenshöhe
+     * Deals damage to this object, potentially killing it.
+     * @param {number} [damage=100] - The amount of damage inflicted.
      */
     takeDamage(damage = 100) {
         this.energy -= damage;
@@ -199,21 +202,20 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Der Boss nimmt Schaden
+     * Causes the boss to take a smaller amount of damage.
      */
     takeHitBoss() {
-        this.energy -= 6;
+        this.energy -= 4;
         if (this.energy < 0) {
             this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
         }
-        // Endboss-Sound
         AudioManager.play('boss', 0.5);
     }
 
     /**
-     * Das Objekt stirbt
+     * Kills this object and plays the appropriate sound.
      */
     die() {
         this.isDeadFlag = true;
@@ -221,7 +223,7 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Das Objekt entfernen
+     * Removes this object from the field by moving it off-screen and marking it as dead.
      */
     remove() {
         this.x = -1000;
@@ -230,30 +232,30 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Überprüfen, ob das Objekt tot ist
-     * @returns {boolean}
+     * Checks if this object is dead.
+     * @returns {boolean} True if dead, otherwise false.
      */
     isDead() {
-        return this.energy == 0 || this.isDeadFlag;
+        return this.energy === 0 || this.isDeadFlag;
     }
 
     /**
-     * Das Objekt bewegt sich nach rechts
+     * Moves the object to the right.
      */
     moveRight() {
         this.x += this.speed;
     }
 
     /**
-     * Das Objekt bewegt sich nach links
+     * Moves the object to the left.
      */
     moveLeft() {
         this.x -= this.speed;
     }
 
     /**
-     * Animation abspielen
-     * @param {Array} images - Array von Bildpfaden
+     * Plays an animation sequence from a given array of image paths.
+     * @param {string[]} images - Array of image paths.
      */
     playAnimation(images) {
         let i = this.currentImage % images.length;
@@ -263,18 +265,9 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Das Objekt springt
+     * Makes the object jump by assigning an upward speed.
      */
     jump() {
         this.speedY = 20;
-    }
-
-    /**
-     * Überprüfen, ob das Objekt in der Luft ist
-     * @returns {boolean}
-     */
-    isInAir() {
-        const groundLevel = 230;
-        return this.y < groundLevel;
     }
 }
