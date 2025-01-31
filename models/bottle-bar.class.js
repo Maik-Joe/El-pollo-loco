@@ -33,24 +33,4 @@ class BottleBar extends DrawableObject {
         let path = this.Images_Bottles[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
-
-    /**
-     * Determines the correct image index based on the current percentage.
-     * @returns {number} The index of the image to use in Images_Bottles.
-     */
-    resolveImageIndex() {
-        if (this.percentage <= 0) {
-            return 0;
-        } else if (this.percentage <= 20) {
-            return 1;
-        } else if (this.percentage <= 40) {
-            return 2;
-        } else if (this.percentage <= 60) {
-            return 3;
-        } else if (this.percentage <= 80) {
-            return 4;
-        } else {
-            return 5;
-        }
-    }
 }

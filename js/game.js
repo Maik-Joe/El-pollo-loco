@@ -1,7 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let soundEnabled = true;
+let soundEnabled = JSON.parse(localStorage.getItem('soundEnabled')) ?? true;
 let sound_Game = new Audio('audio/latin-traditional-music-spanish-mexican-background-intro-theme-258024.mp3');
 sound_Game.volume = 0.04;
 sound_Game.loop = true;
@@ -15,6 +15,19 @@ function init() {
     world = new World(canvas, keyboard);
 }
 
+/**
+ * Initializes event listeners once the DOM content is fully loaded.
+ * This function sets up interactions for various buttons in the UI, including:
+ * - Start button: Triggers the game start.
+ * - Restart button: Restarts the game.
+ * - Fullscreen button: Toggles fullscreen mode.
+ * - Menu button: Redirects the user back to the main menu.
+ * - Sound and mobile controls: Ensures additional UI components are set up.
+ * @listens DOMContentLoaded
+ * @fires handleStartButtonClick - When the start button is clicked.
+ * @fires handleRestart - When the restart button is clicked.
+ * @fires toggleFullscreen - When the fullscreen button is clicked.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('startButton');
     if (startButton) {
@@ -90,9 +103,9 @@ function setupSoundButtons() {
  */
 function toggleSound() {
     soundEnabled = !soundEnabled;
-    const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
-    document.querySelectorAll('#soundButton img, #soundButton2 img')
-        .forEach(img => img.src = newSrc);
+    localStorage.setItem('soundEnabled', JSON.stringify(soundEnabled));
+
+    updateSoundIcons();
 
     if (soundEnabled) {
         sound_Game.play();
@@ -100,8 +113,19 @@ function toggleSound() {
         sound_Game.pause();
         sound_Game.currentTime = 0;
     }
+
     AudioManager.toggleSounds(soundEnabled);
 }
+
+/**
+ * Updating the Sound-Images
+ */
+function updateSoundIcons() {
+    const newSrc = soundEnabled ? 'img/high-volume (1).png' : 'img/volume.png';
+    document.querySelectorAll('#soundButton img, #soundButton2 img')
+        .forEach(img => img.src = newSrc);
+}
+document.addEventListener('DOMContentLoaded', updateSoundIcons);
 
 /**
  * Sets up mobile control buttons.

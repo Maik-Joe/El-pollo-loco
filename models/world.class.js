@@ -33,6 +33,7 @@ class World {
 
         this.moveableObjects = [this.character, ...this.level.enemies];
         this.gameRunning = true;
+        this.throwCooldown = false;
         this.draw();
         this.setWorld();
         this.run();
@@ -158,15 +159,22 @@ class World {
      * bottle and updates the bottle bar.
      */
     checkThrowObjects() {
-        if (this.keyboard.D && this.bottleBar.percentage > 0) {
+        if (this.keyboard.D && this.bottleBar.percentage > 0 && !this.throwCooldown) {
             let bottle = new ThrowableObject(
                 this.character.x + 40,
                 this.character.y + 60,
                 this.bottleBar,
                 this.character.otherDirection ? 'LEFT' : 'RIGHT'
             );
+
             this.throwableObjects.push(bottle);
             this.bottleBar.setPercentage(Math.max(0, this.bottleBar.percentage - 20));
+
+            this.throwCooldown = true; // Throw
+
+            setTimeout(() => {
+                this.throwCooldown = false; // Check Cooldown
+            }, 500); // 500 Millisec.
         }
     }
 

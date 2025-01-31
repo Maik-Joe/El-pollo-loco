@@ -39,19 +39,5 @@ class CoinBar extends DrawableObject {
      * Determines the array index of the image to display based on the current percentage value.
      * @returns {number} The index of the image to use from the {@link Images_Coins} array.
      */
-    resolveImageIndex() {
-        if (this.percentage <= 0) {
-            return 0;
-        } else if (this.percentage <= 20) {
-            return 1;
-        } else if (this.percentage <= 40) {
-            return 2;
-        } else if (this.percentage <= 60) {
-            return 3;
-        } else if (this.percentage <= 80) {
-            return 4;
-        } else {
-            return 5;
-        }
-    }
+
 }

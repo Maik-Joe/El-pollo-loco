@@ -205,7 +205,7 @@ class MoveableObject extends DrawableObject {
      * Causes the boss to take a smaller amount of damage.
      */
     takeHitBoss() {
-        this.energy -= 4;
+        this.energy -= 6;
         if (this.energy < 0) {
             this.energy = 0;
         } else {

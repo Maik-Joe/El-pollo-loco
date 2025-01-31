@@ -1,6 +1,6 @@
 class AudioManager {
 
-    static isSoundEnabled = true;
+    static isSoundEnabled = JSON.parse(localStorage.getItem('soundEnabled')) ?? true;
     
     static sounds = {
         running: new Audio('audio/running-in-grass-6237_O3hpfyba.mp3'),
@@ -44,6 +44,7 @@ class AudioManager {
      */
     static toggleSounds(enabled) {
         this.isSoundEnabled = enabled;
+        localStorage.setItem('soundEnabled', JSON.stringify(enabled));
         if (!enabled) {
             Object.values(this.sounds).forEach(sound => {
                 sound.pause();

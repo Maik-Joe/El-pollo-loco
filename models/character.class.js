@@ -64,7 +64,7 @@ class Character extends MoveableObject {
         top: 40,
         left: 25,
         right: 25,
-        bottom: -5,
+        bottom: 10,
     };
 
     intervalIDMovement;
@@ -186,7 +186,7 @@ class Character extends MoveableObject {
      * if there has been no movement for more than 5 seconds.
      */
     checkForSleep() {
-        if (!this.isSleeping && Date.now() - this.lastMovementTime > 5000) {
+        if (!this.isSleeping && Date.now() - this.lastMovementTime > 10000) {
             this.isSleeping = true;
         }
     }
